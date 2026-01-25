@@ -1,39 +1,39 @@
 const projects = [
   {
-    title: "MCP Weather Server",
+    title: "MCP Weather Seniverse Demo",
     desc: "基于 Python SDK 的 MCP 天气服务，专注稳定的 API 交付。",
     tags: ["Python", "MCP", "API"],
-    link: "https://gitee.com/zhu_yateng/mcp-weather-python-demo",
+    link: "https://github.com/YaBoom/mcp-weather-seniverse-demo",
   },
   {
-    title: "Caffeine Cache Demo",
-    desc: "Java 落地 Caffeine 本地缓存的性能实践，延迟可见可控。",
-    tags: ["Java", "Caffeine", "Cache"],
-    link: "https://gitee.com/zhu_yateng/caffine-demo",
+    title: "Paper Research",
+    desc: "学术论文研究与分析工具，提供高效的文献管理方案。",
+    tags: ["TypeScript", "Research", "Tools"],
+    link: "https://github.com/YaBoom/paper-research",
   },
   {
-    title: "Netty 高性能通信",
-    desc: "用 Netty 构建自定义协议服务，强调吞吐与可维护性。",
-    tags: ["Java", "Netty", "Networking"],
-    link: "https://gitee.com/zhu_yateng/netty-demo",
+    title: "Lumina Festival",
+    desc: "现代化的节日主题应用，打造沉浸式用户体验。",
+    tags: ["TypeScript", "Web", "UI"],
+    link: "https://github.com/YaBoom/Lumina-Festival",
   },
   {
-    title: "Streamlit 数据面板",
-    desc: "Streamlit 快速搭建数据可视化的实验型产品，强调体验。",
-    tags: ["Python", "Streamlit", "UI"],
-    link: "https://gitee.com/zhu_yateng/streamlit_demo",
+    title: "SVG Generator",
+    desc: "强大的 SVG 图形生成器，支持自定义样式与动态效果。",
+    tags: ["TypeScript", "SVG", "Graphics"],
+    link: "https://github.com/YaBoom/SVG-Generator",
   },
   {
-    title: "Qt 音乐播放器",
-    desc: "Qt + C++ 构建的多媒体播放器，重视体验与性能平衡。",
-    tags: ["C++", "Qt", "Media"],
-    link: "https://gitee.com/zhu_yateng/video_server",
+    title: "个人技术博客",
+    desc: "基于 Next.js 构建的现代化个人博客，展示技术实践与思考。",
+    tags: ["TypeScript", "Next.js", "Blog"],
+    link: "https://github.com/YaBoom/my-person-blog",
   },
   {
-    title: "五子棋 AI 对战",
-    desc: "C++ 编写的五子棋博弈，探索棋盘逻辑与策略实现。",
-    tags: ["C++", "Game", "AI"],
-    link: "https://gitee.com/zhu_yateng/Game_refer",
+    title: "Game Refer",
+    desc: "C++ 编写的游戏参考实现，探索游戏逻辑与算法设计。",
+    tags: ["C++", "Game", "Algorithm"],
+    link: "https://github.com/YaBoom/Game_refer",
   },
 ];
 
@@ -41,16 +41,16 @@ const projects = [
 
 const highlights = [
   {
-    title: "后端性能",
-    detail: "Netty、Caffeine、MCP 服务治理",
+    title: "全栈开发",
+    detail: "TypeScript、Next.js、现代化 Web 应用",
   },
   {
-    title: "数据产品",
-    detail: "Streamlit、可视化、用户体验",
+    title: "MCP 服务",
+    detail: "Python SDK、API 设计、服务治理",
   },
   {
-    title: "多语言落地",
-    detail: "Python / Java / C++ / Qt",
+    title: "多语言实践",
+    detail: "TypeScript / Python / C++",
   },
 ];
 
@@ -67,11 +67,11 @@ export default function Home() {
         <header className="flex items-center justify-between rounded-3xl border border-white/10 bg-white/5 px-6 py-4 shadow-lg shadow-emerald-500/10 backdrop-blur lg:px-8">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-blue-500 text-lg font-semibold text-white">
-              JZ
+              YB
             </div>
             <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-slate-300">Jack.zhu</p>
-              <p className="font-medium text-slate-50">朱亚腾 · 创意技术</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-slate-300">YaBoom</p>
+              <p className="font-medium text-slate-50">开源开发者 · 技术探索</p>
             </div>
           </div>
           <nav className="hidden gap-6 text-sm text-slate-200 sm:flex">
@@ -85,11 +85,11 @@ export default function Home() {
           </nav>
           <a
             className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-emerald-500 to-sky-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition hover:translate-y-[-1px] hover:shadow-xl"
-            href="https://gitee.com/zhu_yateng"
+            href="https://github.com/YaBoom"
             target="_blank"
             rel="noreferrer"
           >
-            Gitee · 即刻关注
+            GitHub · 即刻关注
           </a>
         </header>
 
@@ -97,12 +97,12 @@ export default function Home() {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(16,185,129,0.25),transparent_25%),radial-gradient(circle_at_80%_0%,rgba(59,130,246,0.2),transparent_30%)]" />
           <div className="relative grid gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
             <div className="space-y-6">
-              <p className="text-sm uppercase tracking-[0.2em] text-emerald-300/90">创造力驱动的全栈工程师</p>
+              <p className="text-sm uppercase tracking-[0.2em] text-emerald-300/90">开源驱动的全栈开发者</p>
               <h1 className="font-[var(--font-display)] text-4xl leading-tight text-white sm:text-5xl">
-                打造质感体验，记录可复用的工程方法
+                探索技术边界，构建优雅解决方案
               </h1>
               <p className="max-w-2xl text-lg text-slate-200">
-                你好，我是 Jack.zhu（朱亚腾）。从高性能后端、数据可视化到桌面多媒体，我把技术当作创意工具，持续在 Gitee 输出实践与思考。
+                你好，我是 YaBoom。专注于现代化 Web 开发、MCP 服务架构和跨语言技术实践，持续在 GitHub 分享开源项目与技术探索。
               </p>
               <div className="flex flex-wrap gap-3">
                 {highlights.map((item) => (
@@ -118,15 +118,15 @@ export default function Home() {
               <div className="flex flex-wrap gap-4 text-sm text-slate-200">
                 <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2">
                   <span className="h-2 w-2 rounded-full bg-emerald-400" />
-                  最近一年贡献 221 次
+                  21 个开源仓库
                 </div>
                 <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2">
                   <span className="h-2 w-2 rounded-full bg-sky-400" />
-                  14 个仓库持续维护
+                  活跃的 GitHub 贡献者
                 </div>
                 <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2">
                   <span className="h-2 w-2 rounded-full bg-pink-400" />
-                  多语言落地经验
+                  多语言技术栈
                 </div>
               </div>
             </div>
@@ -141,28 +141,28 @@ export default function Home() {
                 <dl className="grid grid-cols-2 gap-4 text-sm text-slate-200">
                   <div className="rounded-2xl bg-white/5 p-4">
                     <dt className="text-xs text-slate-400">核心方向</dt>
-                    <dd className="mt-1 font-semibold text-white">后端性能 / 数据产品</dd>
+                    <dd className="mt-1 font-semibold text-white">全栈开发 / MCP 服务</dd>
                   </div>
                   <div className="rounded-2xl bg-white/5 p-4">
                     <dt className="text-xs text-slate-400">昵称</dt>
-                    <dd className="mt-1 font-semibold text-white">Jack.zhu</dd>
+                    <dd className="mt-1 font-semibold text-white">YaBoom</dd>
                   </div>
                   <div className="rounded-2xl bg-white/5 p-4">
                     <dt className="text-xs text-slate-400">常用语言</dt>
-                    <dd className="mt-1 font-semibold text-white">Python · Java · C++</dd>
+                    <dd className="mt-1 font-semibold text-white">TypeScript · Python · C++</dd>
                   </div>
                   <div className="rounded-2xl bg-white/5 p-4">
                     <dt className="text-xs text-slate-400">平台</dt>
-                    <dd className="mt-1 font-semibold text-white">Gitee / 自建实验室</dd>
+                    <dd className="mt-1 font-semibold text-white">GitHub / 开源社区</dd>
                   </div>
                 </dl>
                 <a
                   className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-blue-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition hover:translate-y-[-1px]"
-                  href="https://gitee.com/zhu_yateng"
+                  href="https://github.com/YaBoom"
                   target="_blank"
                   rel="noreferrer"
                 >
-                  前往 Gitee 看代码
+                  前往 GitHub 看代码
                 </a>
               </div>
             </div>
@@ -178,7 +178,7 @@ export default function Home() {
               <h2 className="mt-2 text-3xl font-semibold text-white">精选项目</h2>
             </div>
             <a
-              href="https://gitee.com/zhu_yateng/projects"
+              href="https://github.com/YaBoom?tab=repositories"
               target="_blank"
               rel="noreferrer"
               className="text-sm text-emerald-200 transition hover:text-white"
@@ -226,10 +226,10 @@ export default function Home() {
             <p className="text-sm uppercase tracking-[0.2em] text-emerald-300/90">Stack</p>
             <h2 className="text-3xl font-semibold text-white">技术栈与习惯</h2>
             <p className="text-slate-200">
-              偏好可观测、可迭代的工程方案：以监控和日志驱动调优，优先清晰的接口语义，再用自动化把效率做高。
+              追求简洁优雅的代码设计，注重用户体验与性能优化，善于将复杂问题转化为可维护的解决方案。
             </p>
             <div className="flex flex-wrap gap-3 text-sm text-slate-200">
-              {["Python", "Java", "C++", "Qt", "Netty", "Caffeine", "Streamlit", "MCP", "Next.js", "Tailwind CSS"].map(
+              {["TypeScript", "Python", "C++", "Next.js", "React", "MCP", "Node.js", "Tailwind CSS", "SVG", "Web APIs"].map(
                 (item) => (
                   <span
                     key={item}
@@ -245,17 +245,17 @@ export default function Home() {
             <div className="rounded-3xl border border-white/10 bg-slate-900/60 p-4 shadow-inner shadow-slate-950/60">
               <p className="text-xs uppercase tracking-[0.2em] text-slate-400">工作流</p>
               <ul className="mt-3 space-y-2">
-                <li>· TDD + 快速原型，优先可验证假设</li>
-                <li>· API 设计前置：幂等、监控、熔断</li>
-                <li>· 自动化 + 观察性，收敛性能迭代</li>
+                <li>· 组件化设计，注重代码复用性</li>
+                <li>· 类型安全优先，TypeScript 全栈</li>
+                <li>· 持续集成，自动化测试与部署</li>
               </ul>
             </div>
             <div className="rounded-3xl border border-white/10 bg-slate-900/60 p-4 shadow-inner shadow-slate-950/60">
               <p className="text-xs uppercase tracking-[0.2em] text-slate-400">侧重场景</p>
               <ul className="mt-3 space-y-2">
-                <li>· 高性能通信与缓存治理</li>
-                <li>· 数据产品体验（可视化 / 交互）</li>
-                <li>· 桌面与多媒体的极致细节</li>
+                <li>· 现代化 Web 应用开发</li>
+                <li>· MCP 服务架构与 API 设计</li>
+                <li>· 数据可视化与图形生成</li>
               </ul>
             </div>
           </div>
@@ -266,13 +266,13 @@ export default function Home() {
             <p className="text-sm uppercase tracking-[0.2em] text-white/90">Connect</p>
             <h3 className="mt-2 text-2xl font-semibold">一起打造下一个灵感</h3>
             <p className="text-sm text-white/90">
-              需要后端性能优化、数据产品设计，或想一起折腾创意项目？随时联系我。
+              对 Web 开发、MCP 服务或开源项目感兴趣？欢迎在 GitHub 上交流合作。
             </p>
           </div>
           <div className="flex flex-wrap gap-3 text-sm font-semibold">
             <a
               className="rounded-full border border-white/70 px-4 py-2 text-white transition hover:-translate-y-0.5"
-              href="https://gitee.com/zhu_yateng/projects"
+              href="https://github.com/YaBoom?tab=repositories"
               target="_blank"
               rel="noreferrer"
             >
@@ -282,8 +282,8 @@ export default function Home() {
         </section>
 
         <footer className="flex flex-col gap-2 text-sm text-slate-400 sm:flex-row sm:items-center sm:justify-between">
-          <span>© 2026 Jack.zhu · 用代码雕刻质感体验</span>
-          <span>最近更新：根据 Gitee 资料整理</span>
+          <span>© 2026 YaBoom · 探索技术，构建未来</span>
+          <span>最近更新：根据 GitHub 资料整理</span>
         </footer>
       </main>
     </div>
