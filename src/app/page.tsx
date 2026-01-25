@@ -271,14 +271,6 @@ export default function Home() {
           </div>
           <div className="flex flex-wrap gap-3 text-sm font-semibold">
             <a
-              className="rounded-full bg-white px-4 py-2 text-emerald-700 shadow-lg transition hover:-translate-y-0.5"
-              href="https://gitee.com/zhu_yateng"
-              target="_blank"
-              rel="noreferrer"
-            >
-              在 Gitee 联系
-            </a>
-            <a
               className="rounded-full border border-white/70 px-4 py-2 text-white transition hover:-translate-y-0.5"
               href="https://gitee.com/zhu_yateng/projects"
               target="_blank"
