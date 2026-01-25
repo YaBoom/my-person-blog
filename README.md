@@ -1,36 +1,151 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 Jack.zhu 个人技术博客
 
-## Getting Started
+> 用代码雕刻质感体验 —— 一个现代、美观的个人技术展示网站
 
-First, run the development server:
+![Next.js](https://img.shields.io/badge/Next.js-16.1.4-black?logo=next.js)
+![React](https://img.shields.io/badge/React-19.2.3-61DAFB?logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss)
+
+---
+
+## 📐 技术架构
+
+### 核心技术栈
+
+| 分类 | 技术 | 版本 | 说明 |
+|------|------|------|------|
+| **框架** | Next.js | 16.1.4 | React 全栈框架，支持 App Router |
+| **前端库** | React | 19.2.3 | 最新 React 19，支持并发特性 |
+| **类型系统** | TypeScript | ^5 | 提供完整类型安全 |
+| **样式方案** | Tailwind CSS | ^4 | 原子化 CSS，支持暗色模式 |
+| **字体优化** | next/font | - | 自动优化 Google Fonts 加载 |
+| **代码规范** | ESLint | ^9 | 集成 Next.js 官方规则 |
+
+### 项目结构
+
+```
+my-person-blog/
+├── src/
+│   └── app/                    # Next.js App Router 目录
+│       ├── layout.tsx          # 根布局（SEO、字体配置）
+│       ├── page.tsx            # 首页组件
+│       ├── globals.css         # 全局样式
+│       └── favicon.ico         # 网站图标
+├── public/                     # 静态资源
+│   ├── file.svg
+│   ├── globe.svg
+│   ├── next.svg
+│   ├── vercel.svg
+│   └── window.svg
+├── next.config.ts              # Next.js 配置
+├── tailwind.config.ts          # Tailwind CSS 配置
+├── tsconfig.json               # TypeScript 配置
+├── postcss.config.mjs          # PostCSS 配置
+└── package.json                # 依赖管理
+```
+
+### 设计亮点
+
+- **🎨 玻璃拟态风格**：采用 `backdrop-blur` + 半透明边框，打造现代质感
+- **✨ 动态渐变背景**：多层模糊光晕叠加，视觉层次丰富
+- **📱 响应式布局**：基于 CSS Grid 与 Flexbox，适配多端设备
+- **🔤 精选字体**：Geist Sans + Playfair Display 组合，兼顾可读性与艺术感
+
+---
+
+## ⚡ 功能说明
+
+### 🏠 首页模块
+
+| 模块 | 功能描述 |
+|------|----------|
+| **导航栏** | 固定顶部，包含个人 Logo、站内锚点、Gitee 快捷入口 |
+| **Hero 区域** | 个人简介、技术亮点标签、贡献数据展示、快速档案卡片 |
+| **项目展示** | 6 个精选项目卡片，支持悬浮动效与外链跳转 |
+| **技术栈** | 技术标签云、工作流习惯、侧重场景说明 |
+| **联系区域** | CTA 按钮，引导访问 Gitee 仓库 |
+| **页脚** | 版权信息与更新时间 |
+
+### 🎯 精选项目
+
+| 项目名称 | 技术标签 | 简介 |
+|----------|----------|------|
+| MCP Weather Server | Python / MCP / API | 基于 Python SDK 的 MCP 天气服务 |
+| Caffeine Cache Demo | Java / Caffeine / Cache | Caffeine 本地缓存性能实践 |
+| Netty 高性能通信 | Java / Netty / Networking | 自定义协议服务，强调吞吐与可维护性 |
+| Streamlit 数据面板 | Python / Streamlit / UI | 快速搭建数据可视化产品 |
+| Qt 音乐播放器 | C++ / Qt / Media | 多媒体播放器，注重体验与性能 |
+| 五子棋 AI 对战 | C++ / Game / AI | 棋盘博弈逻辑与策略实现 |
+
+### 🌟 交互特性
+
+- **悬浮提升**：卡片 hover 时上移 + 阴影增强
+- **平滑过渡**：所有交互均有 `transition` 动画
+- **视觉反馈**：按钮点击时轻微位移，增强触感
+- **渐变边框**：关键元素 hover 时边框颜色渐变
+
+---
+
+## 📦 安装步骤
+
+### 环境要求
+
+- **Node.js** >= 18.x
+- **npm** >= 9.x（或 yarn / pnpm / bun）
+
+### 1️⃣ 克隆项目
+
+```bash
+git clone https://gitee.com/zhu_yateng/my-person-blog.git
+cd my-person-blog
+```
+
+### 2️⃣ 安装依赖
+
+```bash
+npm install
+# 或使用其他包管理器
+yarn install
+pnpm install
+bun install
+```
+
+### 3️⃣ 启动开发服务器
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+启动后访问 **[http://localhost:3000](http://localhost:3000)** 查看效果。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 4️⃣ 构建生产版本
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm run start
+```
 
-## Learn More
+### 5️⃣ 代码检查
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run lint
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🔗 相关链接
 
-## Deploy on Vercel
+- **Gitee 主页**：[https://gitee.com/zhu_yateng](https://gitee.com/zhu_yateng)
+- **Next.js 文档**：[https://nextjs.org/docs](https://nextjs.org/docs)
+- **Tailwind CSS 文档**：[https://tailwindcss.com/docs](https://tailwindcss.com/docs)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📄 许可证
+
+© 2026 Jack.zhu · 用代码雕刻质感体验
+
+---
+
+> 💡 **提示**：如需部署到 Vercel，请参阅 [DEPLOYMENT.md](./DEPLOYMENT.md) 获取详细指南。
