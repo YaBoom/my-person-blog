@@ -97,7 +97,7 @@ my-person-blog/
 ### 1️⃣ 克隆项目
 
 ```bash
-git clone https://gitee.com/zhu_yateng/my-person-blog.git
+git clone https://github.com/YaBoom/my-person-blog.git
 cd my-person-blog
 ```
 
