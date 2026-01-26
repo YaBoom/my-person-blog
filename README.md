@@ -1,4 +1,4 @@
-# 🚀 Jack.zhu 个人技术博客
+# 🚀 YaBoom 个人技术博客
 
 > 用代码雕刻质感体验 —— 一个现代、美观的个人技术展示网站
 
@@ -60,11 +60,11 @@ my-person-blog/
 
 | 模块 | 功能描述 |
 |------|----------|
-| **导航栏** | 固定顶部，包含个人 Logo、站内锚点、Gitee 快捷入口 |
+| **导航栏** | 固定顶部，包含个人 Logo、站内锚点、Github 快捷入口 |
 | **Hero 区域** | 个人简介、技术亮点标签、贡献数据展示、快速档案卡片 |
 | **项目展示** | 6 个精选项目卡片，支持悬浮动效与外链跳转 |
 | **技术栈** | 技术标签云、工作流习惯、侧重场景说明 |
-| **联系区域** | CTA 按钮，引导访问 Gitee 仓库 |
+| **联系区域** | CTA 按钮，引导访问 Github 仓库 |
 | **页脚** | 版权信息与更新时间 |
 
 ### 🎯 精选项目
@@ -136,7 +136,7 @@ npm run lint
 
 ## 🔗 相关链接
 
-- **Gitee 主页**：[https://gitee.com/zhu_yateng](https://gitee.com/zhu_yateng)
+- **Github 主页**：[https://github.com/YaBoom]
 - **Next.js 文档**：[https://nextjs.org/docs](https://nextjs.org/docs)
 - **Tailwind CSS 文档**：[https://tailwindcss.com/docs](https://tailwindcss.com/docs)
 
