@@ -1,43 +1,43 @@
 const projects = [
   {
-    title: "MCP Weather Seniverse Demo",
-    desc: "基于 Python SDK 的 MCP 天气服务，专注稳定的 API 交付。",
+    title: "PocketFlow 探索",
+    desc: "折腾100行代码的AI框架，从质疑到真香的真实踩坑记录。",
+    tags: ["Python", "AI", "实验"],
+    link: "https://github.com/YaBoom/pocketflow-zyt",
+    isNew: true,
+  },
+  {
+    title: "MCP Enterprise Server",
+    desc: "企业级MCP数据服务，让AI Agent安全访问多数据源的实战方案。",
+    tags: ["TypeScript", "MCP", "企业级"],
+    link: "https://github.com/YaBoom/mcp-enterprise-server-zyt",
+    isNew: true,
+  },
+  {
+    title: "MCP Weather 服务",
+    desc: "基于Python SDK的MCP天气服务，专注稳定的API交付。",
     tags: ["Python", "MCP", "API"],
     link: "https://github.com/YaBoom/mcp-weather-seniverse-demo",
   },
   {
-    title: "Paper Research",
-    desc: "学术论文研究与分析工具，提供高效的文献管理方案。",
-    tags: ["TypeScript", "Research", "Tools"],
-    link: "https://github.com/YaBoom/paper-research",
-  },
-  {
-    title: "Lumina Festival",
-    desc: "现代化的节日主题应用，打造沉浸式用户体验。",
-    tags: ["TypeScript", "Web", "UI"],
-    link: "https://github.com/YaBoom/Lumina-Festival",
-  },
-  {
     title: "SVG Generator",
-    desc: "强大的 SVG 图形生成器，支持自定义样式与动态效果。",
-    tags: ["TypeScript", "SVG", "Graphics"],
+    desc: "强大的SVG图形生成器，支持自定义样式与动态效果。",
+    tags: ["TypeScript", "SVG", "图形"],
     link: "https://github.com/YaBoom/SVG-Generator",
   },
   {
+    title: "SpringBoot Dify 集成",
+    desc: "SpringBoot与Dify AI平台的集成方案，快速搭建智能应用。",
+    tags: ["Java", "SpringBoot", "AI"],
+    link: "https://github.com/YaBoom/springboot-dify-integration",
+  },
+  {
     title: "个人技术博客",
-    desc: "基于 Next.js 构建的现代化个人博客，展示技术实践与思考。",
+    desc: "基于Next.js构建的现代化个人博客，展示技术实践与思考。",
     tags: ["TypeScript", "Next.js", "Blog"],
     link: "https://github.com/YaBoom/my-person-blog",
   },
-  {
-    title: "Game Refer",
-    desc: "C++ 编写的游戏参考实现，探索游戏逻辑与算法设计。",
-    tags: ["C++", "Game", "Algorithm"],
-    link: "https://github.com/YaBoom/Game_refer",
-  },
 ];
-
-
 
 const highlights = [
   {
@@ -49,8 +49,8 @@ const highlights = [
     detail: "Python SDK、API 设计、服务治理",
   },
   {
-    title: "多语言实践",
-    detail: "TypeScript / Python / C++",
+    title: "AI 实践",
+    detail: "AI工具探索、踩坑记录、真实体验",
   },
 ];
 
@@ -78,7 +78,6 @@ export default function Home() {
             <a className="transition hover:text-white" href="#projects">
               项目
             </a>
-
             <a className="transition hover:text-white" href="#stack">
               技术栈
             </a>
@@ -97,12 +96,12 @@ export default function Home() {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(16,185,129,0.25),transparent_25%),radial-gradient(circle_at_80%_0%,rgba(59,130,246,0.2),transparent_30%)]" />
           <div className="relative grid gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
             <div className="space-y-6">
-              <p className="text-sm uppercase tracking-[0.2em] text-emerald-300/90">开源驱动的全栈开发者</p>
+              <p className="text-sm uppercase tracking-[0.2em] text-emerald-300/90">还在摸索中的技术爱好者</p>
               <h1 className="font-[var(--font-display)] text-4xl leading-tight text-white sm:text-5xl">
-                探索技术边界，构建优雅解决方案
+                探索技术边界，记录真实踩坑
               </h1>
               <p className="max-w-2xl text-lg text-slate-200">
-                你好，我是 YaBoom。专注于现代化 Web 开发、MCP 服务架构和跨语言技术实践，持续在 GitHub 分享开源项目与技术探索。
+                你好，我是 Jack。专注于现代化 Web 开发、MCP 服务架构和 AI 工具探索。这里记录从0到1的真实折腾过程，常有bug，欢迎指点。
               </p>
               <div className="flex flex-wrap gap-3">
                 {highlights.map((item) => (
@@ -118,15 +117,15 @@ export default function Home() {
               <div className="flex flex-wrap gap-4 text-sm text-slate-200">
                 <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2">
                   <span className="h-2 w-2 rounded-full bg-emerald-400" />
-                  21 个开源仓库
+                  20+ 开源仓库
                 </div>
                 <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2">
                   <span className="h-2 w-2 rounded-full bg-sky-400" />
-                  活跃的 GitHub 贡献者
+                  持续探索中
                 </div>
                 <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2">
                   <span className="h-2 w-2 rounded-full bg-pink-400" />
-                  多语言技术栈
+                  AI 工具踩坑记录
                 </div>
               </div>
             </div>
@@ -141,19 +140,19 @@ export default function Home() {
                 <dl className="grid grid-cols-2 gap-4 text-sm text-slate-200">
                   <div className="rounded-2xl bg-white/5 p-4">
                     <dt className="text-xs text-slate-400">核心方向</dt>
-                    <dd className="mt-1 font-semibold text-white">全栈开发 / MCP 服务</dd>
-                  </div>
-                  <div className="rounded-2xl bg-white/5 p-4">
-                    <dt className="text-xs text-slate-400">昵称</dt>
-                    <dd className="mt-1 font-semibold text-white">YaBoom</dd>
+                    <dd className="mt-1 font-semibold text-white">全栈 / MCP / AI工具</dd>
                   </div>
                   <div className="rounded-2xl bg-white/5 p-4">
                     <dt className="text-xs text-slate-400">常用语言</dt>
-                    <dd className="mt-1 font-semibold text-white">TypeScript · Python · C++</dd>
+                    <dd className="mt-1 font-semibold text-white">TypeScript · Python · Java</dd>
                   </div>
                   <div className="rounded-2xl bg-white/5 p-4">
-                    <dt className="text-xs text-slate-400">平台</dt>
-                    <dd className="mt-1 font-semibold text-white">GitHub / 开源社区</dd>
+                    <dt className="text-xs text-slate-400">写作风格</dt>
+                    <dd className="mt-1 font-semibold text-white">真实踩坑 · 有人味</dd>
+                  </div>
+                  <div className="rounded-2xl bg-white/5 p-4">
+                    <dt className="text-xs text-slate-400">最近更新</dt>
+                    <dd className="mt-1 font-semibold text-white">2026年2月</dd>
                   </div>
                 </dl>
                 <a
@@ -193,8 +192,13 @@ export default function Home() {
                 href={project.link}
                 target="_blank"
                 rel="noreferrer"
-                className="group flex h-full flex-col justify-between rounded-3xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-slate-900/40 transition duration-300 hover:-translate-y-1 hover:border-emerald-200/60 hover:shadow-emerald-500/30"
+                className="group relative flex h-full flex-col justify-between rounded-3xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-slate-900/40 transition duration-300 hover:-translate-y-1 hover:border-emerald-200/60 hover:shadow-emerald-500/30"
               >
+                {project.isNew && (
+                  <span className="absolute -right-2 -top-2 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 px-3 py-1 text-xs font-bold text-white shadow-lg">
+                    NEW
+                  </span>
+                )}
                 <div className="space-y-3">
                   <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-emerald-200">
                     {project.tags.slice(0, 2).join(" · ")}
@@ -219,8 +223,6 @@ export default function Home() {
           </div>
         </section>
 
-
-
         <section id="stack" className="grid gap-6 rounded-[32px] border border-white/10 bg-white/5 p-8 shadow-2xl shadow-slate-900/50 lg:grid-cols-[1.2fr_0.8fr]">
           <div className="space-y-4">
             <p className="text-sm uppercase tracking-[0.2em] text-emerald-300/90">Stack</p>
@@ -229,7 +231,7 @@ export default function Home() {
               追求简洁优雅的代码设计，注重用户体验与性能优化，善于将复杂问题转化为可维护的解决方案。
             </p>
             <div className="flex flex-wrap gap-3 text-sm text-slate-200">
-              {["TypeScript", "Python", "C++", "Next.js", "React", "MCP", "Node.js", "Tailwind CSS", "SVG", "Web APIs"].map(
+              {["TypeScript", "Python", "Java", "Next.js", "React", "MCP", "Node.js", "Tailwind CSS", "AI工具"].map(
                 (item) => (
                   <span
                     key={item}
@@ -245,9 +247,9 @@ export default function Home() {
             <div className="rounded-3xl border border-white/10 bg-slate-900/60 p-4 shadow-inner shadow-slate-950/60">
               <p className="text-xs uppercase tracking-[0.2em] text-slate-400">工作流</p>
               <ul className="mt-3 space-y-2">
-                <li>· 组件化设计，注重代码复用性</li>
+                <li>· 项目先行，文章跟进</li>
                 <li>· 类型安全优先，TypeScript 全栈</li>
-                <li>· 持续集成，自动化测试与部署</li>
+                <li>· 记录真实踩坑，有人味写作</li>
               </ul>
             </div>
             <div className="rounded-3xl border border-white/10 bg-slate-900/60 p-4 shadow-inner shadow-slate-950/60">
@@ -255,7 +257,7 @@ export default function Home() {
               <ul className="mt-3 space-y-2">
                 <li>· 现代化 Web 应用开发</li>
                 <li>· MCP 服务架构与 API 设计</li>
-                <li>· 数据可视化与图形生成</li>
+                <li>· AI 工具探索与评测</li>
               </ul>
             </div>
           </div>
@@ -264,9 +266,9 @@ export default function Home() {
         <section className="flex flex-col gap-6 rounded-[32px] border border-white/10 bg-gradient-to-r from-emerald-600/70 via-emerald-500/70 to-sky-500/70 p-8 text-white shadow-2xl shadow-emerald-500/30 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm uppercase tracking-[0.2em] text-white/90">Connect</p>
-            <h3 className="mt-2 text-2xl font-semibold">一起打造下一个灵感</h3>
+            <h3 className="mt-2 text-2xl font-semibold">一起探索技术</h3>
             <p className="text-sm text-white/90">
-              对 Web 开发、MCP 服务或开源项目感兴趣？欢迎在 GitHub 上交流合作。
+              对 Web 开发、MCP 服务或 AI 工具感兴趣？欢迎交流，常有bug，欢迎指点。
             </p>
           </div>
           <div className="flex flex-wrap gap-3 text-sm font-semibold">
@@ -282,8 +284,8 @@ export default function Home() {
         </section>
 
         <footer className="flex flex-col gap-2 text-sm text-slate-400 sm:flex-row sm:items-center sm:justify-between">
-          <span>© 2026 YaBoom · 探索技术，构建未来</span>
-          <span>最近更新：根据 GitHub 资料整理</span>
+          <span>© 2026 Jack · 探索技术，记录真实</span>
+          <span>最近更新：2026年2月 · 同步 GitHub 最新项目</span>
         </footer>
       </main>
     </div>
