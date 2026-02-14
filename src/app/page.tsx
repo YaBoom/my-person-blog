@@ -1,56 +1,24 @@
-"use client";
+// src/app/page.tsx
+// SSR 模式 - 每次刷新获取 GitHub 最新数据
 
-import { useEffect, useState, useRef } from "react";
+import { Suspense } from 'react';
+import {
+  getUserRepos,
+  getGitHubUser,
+  formatDate,
+  getLanguageColor,
+  getProjectTags,
+  getProjectDescription,
+  isNewProject,
+  isHighlightedProject,
+  GitHubRepo,
+} from '@/lib/github';
 
-// GitHub 项目数据 - 按最近推送排序
-const projects = [
-  {
-    title: "PocketFlow 探索",
-    desc: "折腾100行代码的AI框架，从质疑到真香的真实踩坑记录。",
-    tags: ["Python", "AI", "实验"],
-    link: "https://github.com/YaBoom/pocketflow-zyt",
-    date: "2026-02-12",
-    highlight: true,
-  },
-  {
-    title: "MCP Enterprise Server",
-    desc: "企业级MCP数据服务，让AI Agent安全访问多数据源的实战方案。",
-    tags: ["TypeScript", "MCP", "企业级"],
-    link: "https://github.com/YaBoom/mcp-enterprise-server-zyt",
-    date: "2026-02-12",
-    highlight: true,
-  },
-  {
-    title: "MCP 数据服务",
-    desc: "基于MCP协议的企业级数据查询服务 - 让AI Agent安全访问MySQL/Redis/API",
-    tags: ["TypeScript", "MCP", "Database"],
-    link: "https://github.com/YaBoom/mcp-enterprise-data-server",
-    date: "2026-02-11",
-  },
-  {
-    title: "SVG Generator",
-    desc: "强大的SVG图形生成器，支持自定义样式与动态效果",
-    tags: ["TypeScript", "SVG", "Graphics"],
-    link: "https://github.com/YaBoom/SVG-Generator",
-    date: "2026-02-10",
-  },
-  {
-    title: "SpringBoot Dify 集成",
-    desc: "SpringBoot与Dify AI平台的集成方案",
-    tags: ["Java", "SpringBoot", "AI"],
-    link: "https://github.com/YaBoom/springboot-dify-integration",
-    date: "2026-02-10",
-  },
-  {
-    title: "Netty 实战 Demo",
-    desc: "Netty网络编程学习与实践",
-    tags: ["Java", "Netty", "Network"],
-    link: "https://github.com/YaBoom/netty-demo",
-    date: "2026-02-10",
-  },
-];
+// 强制动态渲染，每次请求都重新获取数据
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
-// 技术栈数据 - 按熟练度/使用频率
+// 技术栈配置（保持不变）
 const techStack = {
   languages: [
     { name: "TypeScript", level: 90, color: "#3178C6", icon: "TS" },
@@ -72,130 +40,19 @@ const techStack = {
   ],
 };
 
-// 打字机效果组件
-function TypewriterText({ text, delay = 100 }: { text: string; delay?: number }) {
-  const [displayText, setDisplayText] = useState("");
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  useEffect(() => {
-    if (currentIndex < text.length) {
-      const timeout = setTimeout(() => {
-        setDisplayText((prev) => prev + text[currentIndex]);
-        setCurrentIndex((prev) => prev + 1);
-      }, delay);
-      return () => clearTimeout(timeout);
-    }
-  }, [currentIndex, text, delay]);
-
+// 统计数据卡片
+function StatCard({ number, label, icon }: { number: string; label: string; icon: string }) {
   return (
-    <span>
-      {displayText}
-      <span className="animate-pulse text-emerald-400">|</span>
-    </span>
+    <div className="rounded-2xl border border-white/10 bg-white/5 p-6 text-center backdrop-blur-sm transition-all hover:border-white/20 hover:bg-white/10">
+      <div className="mb-2 text-3xl">{icon}</div>
+      <div className="text-3xl font-bold text-white">{number}</div>
+      <div className="mt-1 text-sm text-slate-400">{label}</div>
+    </div>
   );
 }
 
-// 粒子背景组件
-function ParticleBackground() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    resizeCanvas();
-    window.addEventListener("resize", resizeCanvas);
-
-    const particles: Array<{
-      x: number;
-      y: number;
-      vx: number;
-      vy: number;
-      size: number;
-      opacity: number;
-    }> = [];
-
-    // 创建粒子
-    for (let i = 0; i < 50; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: (Math.random() - 0.5) * 0.5,
-        size: Math.random() * 2 + 1,
-        opacity: Math.random() * 0.5 + 0.2,
-      });
-    }
-
-    let animationId: number;
-
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      particles.forEach((particle, i) => {
-        particle.x += particle.vx;
-        particle.y += particle.vy;
-
-        if (particle.x < 0 || particle.x > canvas.width) particle.vx *= -1;
-        if (particle.y < 0 || particle.y > canvas.height) particle.vy *= -1;
-
-        ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(16, 185, 129, ${particle.opacity})`;
-        ctx.fill();
-
-        // 连线
-        particles.slice(i + 1).forEach((other) => {
-          const dx = particle.x - other.x;
-          const dy = particle.y - other.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-
-          if (distance < 150) {
-            ctx.beginPath();
-            ctx.moveTo(particle.x, particle.y);
-            ctx.lineTo(other.x, other.y);
-            ctx.strokeStyle = `rgba(16, 185, 129, ${0.1 * (1 - distance / 150)})`;
-            ctx.stroke();
-          }
-        });
-      });
-
-      animationId = requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    return () => {
-      window.removeEventListener("resize", resizeCanvas);
-      cancelAnimationFrame(animationId);
-    };
-  }, []);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      className="pointer-events-none fixed inset-0 -z-10"
-      style={{ opacity: 0.6 }}
-    />
-  );
-}
-
-// 技术栈进度条组件
+// 技术栈进度条
 function TechBar({ name, level, color, icon }: { name: string; level: number; color: string; icon: string }) {
-  const [width, setWidth] = useState(0);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => setWidth(level), 500);
-    return () => clearTimeout(timeout);
-  }, [level]);
-
   return (
     <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/5 p-4 transition-all duration-300 hover:border-white/20 hover:bg-white/10">
       <div className="flex items-center justify-between">
@@ -213,55 +70,39 @@ function TechBar({ name, level, color, icon }: { name: string; level: number; co
       <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
         <div
           className="h-full rounded-full transition-all duration-1000 ease-out"
-          style={{ width: `${width}%`, backgroundColor: color }}
+          style={{ width: `${level}%`, backgroundColor: color }}
         />
       </div>
     </div>
   );
 }
 
-// 项目卡片组件
-function ProjectCard({ project, index }: { project: typeof projects[0]; index: number }) {
-  const [isVisible, setIsVisible] = useState(false);
-  const cardRef = useRef<HTMLAnchorElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setTimeout(() => setIsVisible(true), index * 100);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (cardRef.current) {
-      observer.observe(cardRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, [index]);
-
+// 项目卡片
+function ProjectCard({ repo, index }: { repo: GitHubRepo; index: number }) {
+  const tags = getProjectTags(repo);
+  const description = getProjectDescription(repo);
+  const isNew = isNewProject(repo);
+  const isHighlight = isHighlightedProject(repo);
+  const languageColor = getLanguageColor(repo.language);
+  
   return (
     <a
-      ref={cardRef}
-      href={project.link}
+      href={repo.html_url}
       target="_blank"
       rel="noreferrer"
-      className={`group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/10 to-white/5 p-6 backdrop-blur-sm transition-all duration-500 hover:border-emerald-500/50 hover:shadow-2xl hover:shadow-emerald-500/20 ${
-        isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
-      }`}
+      className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/10 to-white/5 p-6 backdrop-blur-sm transition-all duration-500 hover:border-emerald-500/50 hover:shadow-2xl hover:shadow-emerald-500/20"
+      style={{ animationDelay: `${index * 100}ms` }}
     >
-      {project.highlight && (
+      {/* NEW 标签 */}
+      {(isNew || isHighlight) && (
         <div className="absolute -right-12 top-6 rotate-45 bg-gradient-to-r from-pink-500 to-rose-500 px-12 py-1 text-xs font-bold text-white shadow-lg">
-          NEW
+          {isHighlight ? 'HOT' : 'NEW'}
         </div>
       )}
 
       <div className="mb-4 flex items-center justify-between">
-        <div className="flex gap-2">
-          {project.tags.map((tag) => (
+        <div className="flex flex-wrap gap-2">
+          {tags.map((tag) => (
             <span
               key={tag}
               className="rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-emerald-300"
@@ -270,19 +111,33 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
             </span>
           ))}
         </div>
-        <span className="text-xs text-slate-500">{project.date}</span>
+        <span className="text-xs text-slate-500">{formatDate(repo.pushed_at)}</span>
       </div>
 
       <h3 className="mb-2 text-xl font-bold text-white transition-colors group-hover:text-emerald-400">
-        {project.title}
+        {repo.name}
       </h3>
 
       <p className="mb-4 text-sm leading-relaxed text-slate-400">
-        {project.desc}
+        {description}
       </p>
 
-      <div className="flex items-center text-sm text-emerald-400 transition-all group-hover:translate-x-2">
-        查看项目 →
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4 text-sm text-slate-500">
+          {repo.language && (
+            <span className="flex items-center gap-1">
+              <span 
+                className="h-3 w-3 rounded-full" 
+                style={{ backgroundColor: languageColor }}
+              />
+              {repo.language}
+            </span>
+          )}
+          <span>⭐ {repo.stargazers_count}</span>
+        </div>
+        <span className="text-sm text-emerald-400 transition-all group-hover:translate-x-2">
+          查看项目 →
+        </span>
       </div>
 
       {/* Hover glow effect */}
@@ -291,55 +146,83 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
   );
 }
 
-// 统计数据展示
-function StatCard({ number, label, icon }: { number: string; label: string; icon: string }) {
-  const [count, setCount] = useState(0);
-  const targetNum = parseInt(number.replace(/\D/g, ""));
+// 项目列表组件（异步获取数据）
+async function ProjectList() {
+  try {
+    const repos = await getUserRepos();
+    const featuredRepos = repos.slice(0, 6); // 取前6个最新项目
 
-  useEffect(() => {
-    const duration = 2000;
-    const steps = 60;
-    const increment = targetNum / steps;
-    let current = 0;
-
-    const timer = setInterval(() => {
-      current += increment;
-      if (current >= targetNum) {
-        setCount(targetNum);
-        clearInterval(timer);
-      } else {
-        setCount(Math.floor(current));
-      }
-    }, duration / steps);
-
-    return () => clearInterval(timer);
-  }, [targetNum]);
-
-  return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 p-6 text-center backdrop-blur-sm transition-all hover:border-white/20 hover:bg-white/10">
-      <div className="mb-2 text-3xl">{icon}</div>
-      <div className="text-3xl font-bold text-white">
-        {count}{number.replace(/\d/g, "")}
+    return (
+      <>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {featuredRepos.map((repo, index) => (
+            <ProjectCard key={repo.id} repo={repo} index={index} />
+          ))}
+        </div>
+        <p className="mt-4 text-center text-xs text-slate-500">
+          数据更新时间: {new Date().toLocaleString('zh-CN', { 
+            month: '2-digit', 
+            day: '2-digit', 
+            hour: '2-digit', 
+            minute: '2-digit',
+            second: '2-digit'
+          })}
+        </p>
+      </>
+    );
+  } catch (error) {
+    return (
+      <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-8 text-center">
+        <div className="mb-4 text-4xl">⚠️</div>
+        <h3 className="mb-2 text-lg font-semibold text-red-400">获取 GitHub 数据失败</h3>
+        <p className="text-slate-400">请检查网络连接或稍后重试</p>
       </div>
-      <div className="mt-1 text-sm text-slate-400">{label}</div>
+    );
+  }
+}
+
+// 统计信息组件（异步获取）
+async function StatsSection() {
+  try {
+    const [user, repos] = await Promise.all([getGitHubUser(), getUserRepos()]);
+    const totalStars = repos.reduce((sum, repo) => sum + repo.stargazers_count, 0);
+    
+    return (
+      <div className="grid grid-cols-2 gap-4">
+        <StatCard number={`${user.public_repos}`} label="公开仓库" icon="📦" />
+        <StatCard number={`${totalStars}`} label="总 Stars" icon="⭐" />
+        <StatCard number={`${repos.filter(r => r.language).length}`} label="使用语言" icon="🔤" />
+        <StatCard number="∞" label="踩坑记录" icon="🐛" />
+      </div>
+    );
+  } catch (error) {
+    // 失败时显示默认数据
+    return (
+      <div className="grid grid-cols-2 gap-4">
+        <StatCard number="20+" label="开源项目" icon="🚀" />
+        <StatCard number="5+" label="技术领域" icon="💡" />
+        <StatCard number="4" label="编程语言" icon="🛠️" />
+        <StatCard number="∞" label="踩坑记录" icon="🐛" />
+      </div>
+    );
+  }
+}
+
+// 加载骨架屏
+function ProjectsSkeleton() {
+  return (
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {[...Array(6)].map((_, i) => (
+        <div key={i} className="h-64 animate-pulse rounded-2xl border border-white/10 bg-white/5" />
+      ))}
     </div>
   );
 }
 
+// 主页面组件
 export default function Home() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
-
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-[#0a0a0f] text-slate-200">
-      {/* 粒子背景 */}
-      <ParticleBackground />
-
       {/* 渐变光晕背景 */}
       <div className="pointer-events-none fixed inset-0 -z-10">
         <div className="absolute left-1/4 top-0 h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-emerald-500/10 blur-[150px]" />
@@ -415,17 +298,20 @@ export default function Home() {
               </div>
             </div>
 
-            {/* 统计卡片 */}
-            <div className="grid grid-cols-2 gap-4">
-              <StatCard number="20+" label="开源项目" icon="🚀" />
-              <StatCard number="5+" label="技术领域" icon="💡" />
-              <StatCard number="4" label="编程语言" icon="🛠️" />
-              <StatCard number="∞" label="踩坑记录" icon="🐛" />
-            </div>
+            {/* 统计卡片 - SSR 获取 */}
+            <Suspense fallback={
+              <div className="grid grid-cols-2 gap-4">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="h-24 animate-pulse rounded-2xl bg-white/5" />
+                ))}
+              </div>
+            }>
+              <StatsSection />
+            </Suspense>
           </div>
         </section>
 
-        {/* 项目展示 */}
+        {/* 项目展示 - SSR 获取 GitHub 数据 */}
         <section id="projects" className="mb-32">
           <div className="mb-12 flex items-end justify-between">
             <div>
@@ -433,6 +319,9 @@ export default function Home() {
                 Featured Projects
               </p>
               <h2 className="text-4xl font-bold text-white">精选项目</h2>
+              <p className="mt-2 text-sm text-slate-500">
+                实时同步 GitHub 最新数据 · 刷新即可更新
+              </p>
             </div>
             <a
               href="https://github.com/YaBoom?tab=repositories"
@@ -444,11 +333,9 @@ export default function Home() {
             </a>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {projects.map((project, index) => (
-              <ProjectCard key={project.title} project={project} index={index} />
-            ))}
-          </div>
+          <Suspense fallback={<ProjectsSkeleton />}>
+            <ProjectList />
+          </Suspense>
         </section>
 
         {/* 技术栈展示 */}
@@ -464,7 +351,6 @@ export default function Home() {
           </div>
 
           <div className="space-y-8">
-            {/* 编程语言 */}
             <div>
               <h3 className="mb-4 text-lg font-semibold text-white">编程语言</h3>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -474,7 +360,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* 框架 */}
             <div>
               <h3 className="mb-4 text-lg font-semibold text-white">框架与库</h3>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -484,7 +369,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* 工具 */}
             <div>
               <h3 className="mb-4 text-lg font-semibold text-white">工具与实践</h3>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -495,7 +379,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* 工作流特点 */}
           <div className="mt-12 grid gap-6 sm:grid-cols-3">
             <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-emerald-500/10 to-transparent p-6">
               <div className="mb-3 text-2xl">📝</div>
@@ -544,7 +427,7 @@ export default function Home() {
         {/* Footer */}
         <footer className="border-t border-white/10 py-8 text-center text-sm text-slate-500">
           <p>© 2026 Jack · 探索技术，记录真实</p>
-          <p className="mt-1">最近更新：2026年2月 · 同步 GitHub 最新项目</p>
+          <p className="mt-1">实时同步 GitHub 数据 · SSR 渲染</p>
         </footer>
       </main>
     </div>
