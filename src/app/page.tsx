@@ -409,17 +409,13 @@ export default function Home() {
               <h3 className="mb-4 text-lg font-semibold text-white">💬 使用效果</h3>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/5">
-                  <div className="aspect-video bg-slate-800 flex items-center justify-center text-slate-500">
-                    <span>个人助理截图 1（请提供）</span>
-                  </div>
+                  <img src="/lobster-screenshots/assistant-1.jpg" alt="对话演示" className="w-full aspect-video object-cover" />
                   <div className="absolute inset-0 bg-black/60 opacity-0 transition-opacity group-hover:opacity-100 flex items-center justify-center">
                     <span className="text-white">对话演示</span>
                   </div>
                 </div>
                 <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/5">
-                  <div className="aspect-video bg-slate-800 flex items-center justify-center text-slate-500">
-                    <span>个人助理截图 2（请提供）</span>
-                  </div>
+                  <img src="/lobster-screenshots/assistant-2.jpg" alt="任务执行" className="w-full aspect-video object-cover" />
                   <div className="absolute inset-0 bg-black/60 opacity-0 transition-opacity group-hover:opacity-100 flex items-center justify-center">
                     <span className="text-white">任务执行</span>
                   </div>
