@@ -365,14 +365,14 @@ export default function Home() {
               <p className="text-sm text-slate-400">Docker 容器化部署</p>
             </div>
             <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-purple-500/10 to-transparent p-6">
-              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-purple-500/20 text-2xl">🧠</div>
-              <h4 className="mb-2 font-semibold text-white">Soul 配置</h4>
-              <p className="text-sm text-slate-400">个性化身份与记忆</p>
+              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-purple-500/20 text-2xl">🔗</div>
+              <h4 className="mb-2 font-semibold text-white">技能集成</h4>
+              <p className="text-sm text-slate-400">小红书/GitHub/飞书</p>
             </div>
             <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-rose-500/10 to-transparent p-6">
-              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-rose-500/20 text-2xl">🎯</div>
-              <h4 className="mb-2 font-semibold text-white">模型配置</h4>
-              <p className="text-sm text-slate-400">AI模型选择与调优</p>
+              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-rose-500/20 text-2xl">🤖</div>
+              <h4 className="mb-2 font-semibold text-white">定时任务</h4>
+              <p className="text-sm text-slate-400">自动化内容创作</p>
             </div>
           </div>
 
@@ -380,11 +380,9 @@ export default function Home() {
           <div className="space-y-6">
             <div>
               <h3 className="mb-4 text-lg font-semibold text-white">🐚 部署过程</h3>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="grid gap-4 sm:grid-cols-2">
                 <ImageModal src="/lobster-screenshots/deploy-1.jpg" alt="服务器配置" />
                 <ImageModal src="/lobster-screenshots/deploy-2.jpg" alt="环境部署" />
-                <ImageModal src="/lobster-screenshots/soul-config.jpg" alt="Soul 配置" />
-                <ImageModal src="/lobster-screenshots/model-config.jpg" alt="模型配置" />
               </div>
             </div>
 
