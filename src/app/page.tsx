@@ -242,7 +242,7 @@ export default function Home() {
           <div className="hidden gap-8 text-sm sm:flex">
             <a href="#about" className="transition hover:text-emerald-400">关于</a>
             <a href="#projects" className="transition hover:text-emerald-400">项目</a>
-            <a href="#lobster" className="transition hover:text-emerald-400">小龙虾</a>
+            <a href="#lobster" className="transition hover:text-emerald-400">Openclaw部署</a>
             <a href="#stack" className="transition hover:text-emerald-400">技术栈</a>
           </div>
           <a
@@ -339,15 +339,15 @@ export default function Home() {
           </Suspense>
         </section>
 
-        {/* 小龙虾部署展示 */}
+        {/* Openclaw部署展示 */}
         <section id="lobster" className="mb-32">
           <div className="mb-12 text-center">
             <p className="mb-2 text-sm font-medium uppercase tracking-wider text-emerald-400">
               OpenClaw
             </p>
-            <h2 className="text-4xl font-bold text-white">小龙虾 AI 部署实录</h2>
+            <h2 className="text-4xl font-bold text-white">Openclaw 部署过程</h2>
             <p className="mt-4 text-slate-400">
-              从零搭建个人 AI 助手，全流程记录
+              基于 OpenClaw 搭建个人 AI 助手，支持小红书、GitHub 等技能集成
             </p>
           </div>
 
@@ -355,23 +355,23 @@ export default function Home() {
           <div className="mb-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-emerald-500/10 to-transparent p-6">
               <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/20 text-2xl">🖥️</div>
-              <h4 className="mb-2 font-semibold text-white">1. 服务器准备</h4>
-              <p className="text-sm text-slate-400">云服务器环境配置</p>
+              <h4 className="mb-2 font-semibold text-white">服务器配置</h4>
+              <p className="text-sm text-slate-400">腾讯云轻量服务器环境</p>
             </div>
             <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-blue-500/10 to-transparent p-6">
               <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500/20 text-2xl">⚙️</div>
-              <h4 className="mb-2 font-semibold text-white">2. 核心配置</h4>
-              <p className="text-sm text-slate-400">Docker + OpenClaw 部署</p>
+              <h4 className="mb-2 font-semibold text-white">OpenClaw 部署</h4>
+              <p className="text-sm text-slate-400">Docker 容器化部署</p>
             </div>
             <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-purple-500/10 to-transparent p-6">
               <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-purple-500/20 text-2xl">🔗</div>
-              <h4 className="mb-2 font-semibold text-white">3. 技能集成</h4>
-              <p className="text-sm text-slate-400">小红书 + GitHub + AI 工具</p>
+              <h4 className="mb-2 font-semibold text-white">技能集成</h4>
+              <p className="text-sm text-slate-400">小红书/GitHub/飞书</p>
             </div>
             <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-rose-500/10 to-transparent p-6">
               <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-rose-500/20 text-2xl">🤖</div>
-              <h4 className="mb-2 font-semibold text-white">4. 自动化运行</h4>
-              <p className="text-sm text-slate-400">定时任务 + 持续优化</p>
+              <h4 className="mb-2 font-semibold text-white">定时任务</h4>
+              <p className="text-sm text-slate-400">自动化内容创作</p>
             </div>
           </div>
 
@@ -427,9 +427,14 @@ export default function Home() {
           </div>
 
           <div className="mt-8 text-center">
-            <p className="text-sm text-slate-500">
-              📍 截图将陆续更新...
-            </p>
+            <a 
+              href="https://github.com/YaBoom" 
+              target="_blank" 
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-6 py-3 text-sm text-emerald-400 transition hover:bg-emerald-500/20"
+            >
+              查看更多项目 →
+            </a>
           </div>
         </section>
 
