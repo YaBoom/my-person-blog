@@ -13,6 +13,7 @@ import {
   isHighlightedProject,
   GitHubRepo,
 } from '@/lib/github';
+import { ImageModal } from '@/components/ImageModal';
 
 // 强制动态渲染，每次请求都重新获取数据
 export const dynamic = 'force-dynamic';
@@ -364,14 +365,14 @@ export default function Home() {
               <p className="text-sm text-slate-400">Docker 容器化部署</p>
             </div>
             <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-purple-500/10 to-transparent p-6">
-              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-purple-500/20 text-2xl">🔗</div>
-              <h4 className="mb-2 font-semibold text-white">技能集成</h4>
-              <p className="text-sm text-slate-400">小红书/GitHub/飞书</p>
+              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-purple-500/20 text-2xl">🧠</div>
+              <h4 className="mb-2 font-semibold text-white">Soul 配置</h4>
+              <p className="text-sm text-slate-400">个性化身份与记忆</p>
             </div>
             <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-rose-500/10 to-transparent p-6">
-              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-rose-500/20 text-2xl">🤖</div>
-              <h4 className="mb-2 font-semibold text-white">定时任务</h4>
-              <p className="text-sm text-slate-400">自动化内容创作</p>
+              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-rose-500/20 text-2xl">🎯</div>
+              <h4 className="mb-2 font-semibold text-white">模型配置</h4>
+              <p className="text-sm text-slate-400">AI模型选择与调优</p>
             </div>
           </div>
 
@@ -380,48 +381,18 @@ export default function Home() {
             <div>
               <h3 className="mb-4 text-lg font-semibold text-white">🐚 部署过程</h3>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/5">
-                  <img src="/lobster-screenshots/deploy-1.jpg" alt="服务器配置" className="w-full aspect-video object-cover" />
-                  <div className="absolute inset-0 bg-black/60 opacity-0 transition-opacity group-hover:opacity-100 flex items-center justify-center">
-                    <span className="text-white">服务器配置</span>
-                  </div>
-                </div>
-                <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/5">
-                  <img src="/lobster-screenshots/deploy-2.jpg" alt="环境部署" className="w-full aspect-video object-cover" />
-                  <div className="absolute inset-0 bg-black/60 opacity-0 transition-opacity group-hover:opacity-100 flex items-center justify-center">
-                    <span className="text-white">环境部署</span>
-                  </div>
-                </div>
-                <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/5">
-                  <img src="/lobster-screenshots/deploy-3.jpg" alt="技能配置" className="w-full aspect-video object-cover" />
-                  <div className="absolute inset-0 bg-black/60 opacity-0 transition-opacity group-hover:opacity-100 flex items-center justify-center">
-                    <span className="text-white">技能配置</span>
-                  </div>
-                </div>
-                <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/5">
-                  <img src="/lobster-screenshots/deploy-4.jpg" alt="定时任务" className="w-full aspect-video object-cover" />
-                  <div className="absolute inset-0 bg-black/60 opacity-0 transition-opacity group-hover:opacity-100 flex items-center justify-center">
-                    <span className="text-white">定时任务</span>
-                  </div>
-                </div>
+                <ImageModal src="/lobster-screenshots/deploy-1.jpg" alt="服务器配置" />
+                <ImageModal src="/lobster-screenshots/deploy-2.jpg" alt="环境部署" />
+                <ImageModal src="/lobster-screenshots/soul-config.jpg" alt="Soul 配置" />
+                <ImageModal src="/lobster-screenshots/model-config.jpg" alt="模型配置" />
               </div>
             </div>
 
             <div>
               <h3 className="mb-4 text-lg font-semibold text-white">💬 使用效果</h3>
               <div className="grid gap-4 sm:grid-cols-2">
-                <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/5">
-                  <img src="/lobster-screenshots/assistant-1.jpg" alt="对话演示" className="w-full aspect-video object-cover" />
-                  <div className="absolute inset-0 bg-black/60 opacity-0 transition-opacity group-hover:opacity-100 flex items-center justify-center">
-                    <span className="text-white">对话演示</span>
-                  </div>
-                </div>
-                <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/5">
-                  <img src="/lobster-screenshots/assistant-2.jpg" alt="任务执行" className="w-full aspect-video object-cover" />
-                  <div className="absolute inset-0 bg-black/60 opacity-0 transition-opacity group-hover:opacity-100 flex items-center justify-center">
-                    <span className="text-white">任务执行</span>
-                  </div>
-                </div>
+                <ImageModal src="/lobster-screenshots/assistant-1.jpg" alt="对话演示" />
+                <ImageModal src="/lobster-screenshots/assistant-2.jpg" alt="任务执行" />
               </div>
             </div>
           </div>
