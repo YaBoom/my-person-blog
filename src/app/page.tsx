@@ -381,16 +381,14 @@ export default function Home() {
               <h3 className="mb-4 text-lg font-semibold text-white">🐚 部署过程</h3>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/5">
-                  <div className="aspect-video bg-slate-800 flex items-center justify-center text-slate-500">
-                    <span>截图 1</span>
-                  </div>
+                  <img src="/lobster-screenshots/config-overview.png" alt="配置总览" className="w-full aspect-video object-cover" />
                   <div className="absolute inset-0 bg-black/60 opacity-0 transition-opacity group-hover:opacity-100 flex items-center justify-center">
-                    <span className="text-white">服务器配置</span>
+                    <span className="text-white">配置总览</span>
                   </div>
                 </div>
                 <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/5">
                   <div className="aspect-video bg-slate-800 flex items-center justify-center text-slate-500">
-                    <span>截图 2</span>
+                    <span>截图 2（待补充）</span>
                   </div>
                   <div className="absolute inset-0 bg-black/60 opacity-0 transition-opacity group-hover:opacity-100 flex items-center justify-center">
                     <span className="text-white">Docker 部署</span>
@@ -398,7 +396,7 @@ export default function Home() {
                 </div>
                 <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/5">
                   <div className="aspect-video bg-slate-800 flex items-center justify-center text-slate-500">
-                    <span>截图 3</span>
+                    <span>截图 3（待补充）</span>
                   </div>
                   <div className="absolute inset-0 bg-black/60 opacity-0 transition-opacity group-hover:opacity-100 flex items-center justify-center">
                     <span className="text-white">技能配置</span>
@@ -412,7 +410,7 @@ export default function Home() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/5">
                   <div className="aspect-video bg-slate-800 flex items-center justify-center text-slate-500">
-                    <span>个人助理截图 1</span>
+                    <span>个人助理截图 1（请提供）</span>
                   </div>
                   <div className="absolute inset-0 bg-black/60 opacity-0 transition-opacity group-hover:opacity-100 flex items-center justify-center">
                     <span className="text-white">对话演示</span>
@@ -420,7 +418,7 @@ export default function Home() {
                 </div>
                 <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/5">
                   <div className="aspect-video bg-slate-800 flex items-center justify-center text-slate-500">
-                    <span>个人助理截图 2</span>
+                    <span>个人助理截图 2（请提供）</span>
                   </div>
                   <div className="absolute inset-0 bg-black/60 opacity-0 transition-opacity group-hover:opacity-100 flex items-center justify-center">
                     <span className="text-white">任务执行</span>
