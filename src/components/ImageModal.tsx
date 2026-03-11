@@ -18,9 +18,6 @@ export function ImageModal({ src, alt }: ImageModalProps) {
         onClick={() => setIsOpen(true)}
       >
         <img src={src} alt={alt} className="w-full aspect-video object-cover transition-transform duration-300 group-hover:scale-105" />
-        <div className="absolute inset-0 bg-black/40 opacity-0 transition-opacity group-hover:opacity-100 flex items-center justify-center">
-          <span className="text-white text-sm font-medium">点击放大</span>
-        </div>
       </div>
 
       {/* 放大模态框 */}
@@ -42,9 +39,6 @@ export function ImageModal({ src, alt }: ImageModalProps) {
             >
               关闭 ✕
             </button>
-            <p className="absolute -bottom-8 left-0 right-0 text-center text-white/70 text-sm">
-              {alt} · 点击任意处关闭
-            </p>
           </div>
         </div>
       )}
