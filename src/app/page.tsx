@@ -242,6 +242,7 @@ export default function Home() {
           <div className="hidden gap-8 text-sm sm:flex">
             <a href="#about" className="transition hover:text-emerald-400">关于</a>
             <a href="#projects" className="transition hover:text-emerald-400">项目</a>
+            <a href="#lobster" className="transition hover:text-emerald-400">小龙虾</a>
             <a href="#stack" className="transition hover:text-emerald-400">技术栈</a>
           </div>
           <a
@@ -336,6 +337,104 @@ export default function Home() {
           <Suspense fallback={<ProjectsSkeleton />}>
             <ProjectList />
           </Suspense>
+        </section>
+
+        {/* 小龙虾部署展示 */}
+        <section id="lobster" className="mb-32">
+          <div className="mb-12 text-center">
+            <p className="mb-2 text-sm font-medium uppercase tracking-wider text-emerald-400">
+              OpenClaw
+            </p>
+            <h2 className="text-4xl font-bold text-white">小龙虾 AI 部署实录</h2>
+            <p className="mt-4 text-slate-400">
+              从零搭建个人 AI 助手，全流程记录
+            </p>
+          </div>
+
+          {/* 部署步骤 */}
+          <div className="mb-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-emerald-500/10 to-transparent p-6">
+              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/20 text-2xl">🖥️</div>
+              <h4 className="mb-2 font-semibold text-white">1. 服务器准备</h4>
+              <p className="text-sm text-slate-400">云服务器环境配置</p>
+            </div>
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-blue-500/10 to-transparent p-6">
+              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500/20 text-2xl">⚙️</div>
+              <h4 className="mb-2 font-semibold text-white">2. 核心配置</h4>
+              <p className="text-sm text-slate-400">Docker + OpenClaw 部署</p>
+            </div>
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-purple-500/10 to-transparent p-6">
+              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-purple-500/20 text-2xl">🔗</div>
+              <h4 className="mb-2 font-semibold text-white">3. 技能集成</h4>
+              <p className="text-sm text-slate-400">小红书 + GitHub + AI 工具</p>
+            </div>
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-rose-500/10 to-transparent p-6">
+              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-rose-500/20 text-2xl">🤖</div>
+              <h4 className="mb-2 font-semibold text-white">4. 自动化运行</h4>
+              <p className="text-sm text-slate-400">定时任务 + 持续优化</p>
+            </div>
+          </div>
+
+          {/* 截图展示 - 网格布局 */}
+          <div className="space-y-6">
+            <div>
+              <h3 className="mb-4 text-lg font-semibold text-white">🐚 部署过程</h3>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/5">
+                  <div className="aspect-video bg-slate-800 flex items-center justify-center text-slate-500">
+                    <span>截图 1</span>
+                  </div>
+                  <div className="absolute inset-0 bg-black/60 opacity-0 transition-opacity group-hover:opacity-100 flex items-center justify-center">
+                    <span className="text-white">服务器配置</span>
+                  </div>
+                </div>
+                <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/5">
+                  <div className="aspect-video bg-slate-800 flex items-center justify-center text-slate-500">
+                    <span>截图 2</span>
+                  </div>
+                  <div className="absolute inset-0 bg-black/60 opacity-0 transition-opacity group-hover:opacity-100 flex items-center justify-center">
+                    <span className="text-white">Docker 部署</span>
+                  </div>
+                </div>
+                <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/5">
+                  <div className="aspect-video bg-slate-800 flex items-center justify-center text-slate-500">
+                    <span>截图 3</span>
+                  </div>
+                  <div className="absolute inset-0 bg-black/60 opacity-0 transition-opacity group-hover:opacity-100 flex items-center justify-center">
+                    <span className="text-white">技能配置</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="mb-4 text-lg font-semibold text-white">💬 使用效果</h3>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/5">
+                  <div className="aspect-video bg-slate-800 flex items-center justify-center text-slate-500">
+                    <span>个人助理截图 1</span>
+                  </div>
+                  <div className="absolute inset-0 bg-black/60 opacity-0 transition-opacity group-hover:opacity-100 flex items-center justify-center">
+                    <span className="text-white">对话演示</span>
+                  </div>
+                </div>
+                <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/5">
+                  <div className="aspect-video bg-slate-800 flex items-center justify-center text-slate-500">
+                    <span>个人助理截图 2</span>
+                  </div>
+                  <div className="absolute inset-0 bg-black/60 opacity-0 transition-opacity group-hover:opacity-100 flex items-center justify-center">
+                    <span className="text-white">任务执行</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-8 text-center">
+            <p className="text-sm text-slate-500">
+              📍 截图将陆续更新...
+            </p>
+          </div>
         </section>
 
         {/* 技术栈展示 */}
