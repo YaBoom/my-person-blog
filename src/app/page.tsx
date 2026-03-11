@@ -379,27 +379,29 @@ export default function Home() {
           <div className="space-y-6">
             <div>
               <h3 className="mb-4 text-lg font-semibold text-white">🐚 部署过程</h3>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/5">
-                  <img src="/lobster-screenshots/config-overview.png" alt="配置总览" className="w-full aspect-video object-cover" />
+                  <img src="/lobster-screenshots/deploy-1.jpg" alt="服务器配置" className="w-full aspect-video object-cover" />
                   <div className="absolute inset-0 bg-black/60 opacity-0 transition-opacity group-hover:opacity-100 flex items-center justify-center">
-                    <span className="text-white">配置总览</span>
+                    <span className="text-white">服务器配置</span>
                   </div>
                 </div>
                 <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/5">
-                  <div className="aspect-video bg-slate-800 flex items-center justify-center text-slate-500">
-                    <span>截图 2（待补充）</span>
-                  </div>
+                  <img src="/lobster-screenshots/deploy-2.jpg" alt="环境部署" className="w-full aspect-video object-cover" />
                   <div className="absolute inset-0 bg-black/60 opacity-0 transition-opacity group-hover:opacity-100 flex items-center justify-center">
-                    <span className="text-white">Docker 部署</span>
+                    <span className="text-white">环境部署</span>
                   </div>
                 </div>
                 <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/5">
-                  <div className="aspect-video bg-slate-800 flex items-center justify-center text-slate-500">
-                    <span>截图 3（待补充）</span>
-                  </div>
+                  <img src="/lobster-screenshots/deploy-3.jpg" alt="技能配置" className="w-full aspect-video object-cover" />
                   <div className="absolute inset-0 bg-black/60 opacity-0 transition-opacity group-hover:opacity-100 flex items-center justify-center">
                     <span className="text-white">技能配置</span>
+                  </div>
+                </div>
+                <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/5">
+                  <img src="/lobster-screenshots/deploy-4.jpg" alt="定时任务" className="w-full aspect-video object-cover" />
+                  <div className="absolute inset-0 bg-black/60 opacity-0 transition-opacity group-hover:opacity-100 flex items-center justify-center">
+                    <span className="text-white">定时任务</span>
                   </div>
                 </div>
               </div>
