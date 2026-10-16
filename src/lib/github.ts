@@ -296,7 +296,7 @@ export const CURATED_REPOS: Record<string, CuratedProject> = {
     role: 'AI 智能日志根因分析工具',
     highlights: [
       'LLM 快速定位线上问题根因，Bad Case 归因思路的产品化',
-      '5 Star · 从日志噪声到可行动结论',
+      '配套 Harness（loglens-newsletter）驱动持续迭代',
     ],
     group: 'eval',
     jdTags: ['根因分析', 'AI 应用'],

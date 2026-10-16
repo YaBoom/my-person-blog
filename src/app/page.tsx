@@ -170,8 +170,7 @@ function ProjectCard({ name, repo, curated, index }: { name: string; repo?: GitH
               {repo.language}
             </span>
           )}
-          {repo && <span>⭐ {repo.stargazers_count}</span>}
-          {repo && <span className="text-xs">{formatDate(repo.pushed_at)}</span>}
+          {repo && <span className="text-xs">持续迭代 · {formatDate(repo.pushed_at)}</span>}
         </div>
         <span className="text-emerald-400 transition-all group-hover:translate-x-2">
           查看项目 →
@@ -224,7 +223,7 @@ async function CuratedProjectList() {
         );
       })}
       <p className="text-center text-xs text-slate-500">
-        Star 数与更新时间实时同步 GitHub · 数据更新时间: {new Date().toLocaleString('zh-CN', {
+        更新时间实时同步 GitHub · 数据更新时间: {new Date().toLocaleString('zh-CN', {
           month: '2-digit',
           day: '2-digit',
           hour: '2-digit',
@@ -235,31 +234,30 @@ async function CuratedProjectList() {
   );
 }
 
-// 统计信息组件（异步获取）
+// 统计信息组件（异步获取）——只展示有价值信号，不暴露 Star 短板
 async function StatsSection() {
   try {
     const [user, repos] = await Promise.all([getGitHubUser(), getUserRepos()]);
-    const totalStars = repos.reduce((sum, repo) => sum + repo.stargazers_count, 0);
     const mcpAgentRepos = repos.filter((r) =>
-      /mcp|agent|langgraph|rag|guardrail|skill/i.test(r.name)
+      /mcp|agent|langgraph|rag|guardrail|skill|loglens|harness|context/i.test(r.name)
     ).length;
 
     return (
       <div className="grid grid-cols-2 gap-4">
-        <StatCard number={`${user.public_repos}`} label="公开仓库" icon="📦" />
-        <StatCard number={`${totalStars}`} label="总 Stars" icon="⭐" />
-        <StatCard number={`${mcpAgentRepos}+`} label="Agent/MCP 项目" icon="🤖" />
+        <StatCard number={`${user.public_repos}`} label="开源仓库" icon="📦" />
+        <StatCard number={`${mcpAgentRepos}+`} label="Agent/MCP 实战仓库" icon="🤖" />
         <StatCard number="53→99%" label="护栏实测准确率" icon="🛡️" />
+        <StatCard number="7×24" label="Harness 自动回路" icon="🔁" />
       </div>
     );
   } catch (error) {
     // 失败时显示默认数据
     return (
       <div className="grid grid-cols-2 gap-4">
-        <StatCard number="30+" label="开源项目" icon="🚀" />
-        <StatCard number="10+" label="Agent/MCP 项目" icon="🤖" />
-        <StatCard number="4" label="MCP Server 实践" icon="🔌" />
+        <StatCard number="30+" label="开源仓库" icon="📦" />
+        <StatCard number="10+" label="Agent/MCP 实战仓库" icon="🤖" />
         <StatCard number="53→99%" label="护栏实测准确率" icon="🛡️" />
+        <StatCard number="7×24" label="Harness 自动回路" icon="🔁" />
       </div>
     );
   }
@@ -307,7 +305,7 @@ export default function Home() {
             <a href="#about" className="transition hover:text-emerald-400">关于</a>
             <a href="#capabilities" className="transition hover:text-emerald-400">Agent 能力</a>
             <a href="#projects" className="transition hover:text-emerald-400">项目</a>
-            <a href="#lobster" className="transition hover:text-emerald-400">AI 助手实战</a>
+            <a href="#harness" className="transition hover:text-emerald-400">Harness 实战</a>
             <a href="#stack" className="transition hover:text-emerald-400">技术栈</a>
           </div>
           <a
@@ -444,70 +442,103 @@ export default function Home() {
           </Suspense>
         </section>
 
-        {/* Openclaw 实战展示 */}
-        <section id="lobster" className="mb-32">
+        {/* Agent Harness 实战拆解 */}
+        <section id="harness" className="mb-32">
           <div className="mb-12 text-center">
             <p className="mb-2 text-sm font-medium uppercase tracking-wider text-emerald-400">
-              Agent in Production
+              Agent Harness in Practice
             </p>
-            <h2 className="text-4xl font-bold text-white">个人 AI 助手实战</h2>
+            <h2 className="text-4xl font-bold text-white">Agent Harness 实战拆解</h2>
             <p className="mt-4 text-slate-400">
-              基于 OpenClaw 搭建的个人 AI Agent：技能（Skills）集成、定时任务、容器化部署全流程
+              为我的开源项目 LogLens（AI 日志根因分析）搭建的上下文基础设施：
+              <br className="hidden sm:block" />
+              5 条 Axioms 决策原则 + 4 个 Skills 标准作业手册 + 采集→蒸馏→发布的周期回路
             </p>
+            <div className="mt-5 flex flex-wrap justify-center gap-3">
+              <a
+                href="https://github.com/YaBoom/loglens-newsletter"
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-5 py-2 text-sm text-emerald-400 transition hover:bg-emerald-500/20"
+              >
+                📗 loglens-newsletter（Harness 本体）
+              </a>
+              <a
+                href="https://github.com/YaBoom/loglens-zyt"
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-full border border-white/20 bg-white/5 px-5 py-2 text-sm text-slate-300 transition hover:border-white/40"
+              >
+                🔍 loglens-zyt（AI 日志根因分析）
+              </a>
+            </div>
           </div>
 
-          {/* 部署步骤 */}
-          <div className="mb-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {/* 架构分层 */}
+          <div className="mb-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-emerald-500/10 to-transparent p-6">
-              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/20 text-2xl">🖥️</div>
-              <h4 className="mb-2 font-semibold text-white">服务器配置</h4>
-              <p className="text-sm text-slate-400">腾讯云轻量服务器环境</p>
+              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/20 text-2xl">📏</div>
+              <h4 className="mb-2 font-semibold text-white">Axioms 原则库</h4>
+              <p className="text-sm text-slate-400">5 条反复验证的判断原则，AI 决策前先查表</p>
             </div>
             <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-blue-500/10 to-transparent p-6">
-              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500/20 text-2xl">⚙️</div>
-              <h4 className="mb-2 font-semibold text-white">Agent 部署</h4>
-              <p className="text-sm text-slate-400">Docker 容器化部署</p>
+              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500/20 text-2xl">📘</div>
+              <h4 className="mb-2 font-semibold text-white">Skills 作业手册</h4>
+              <p className="text-sm text-slate-400">axiom 管「要不要做」，skill 管「具体怎么做」</p>
             </div>
             <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-purple-500/10 to-transparent p-6">
-              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-purple-500/20 text-2xl">🧩</div>
-              <h4 className="mb-2 font-semibold text-white">Skills 集成</h4>
-              <p className="text-sm text-slate-400">小红书/GitHub/飞书技能热插拔</p>
+              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-purple-500/20 text-2xl">🔁</div>
+              <h4 className="mb-2 font-semibold text-white">周期回路</h4>
+              <p className="text-sm text-slate-400">collect → distill → publish，周级 Loop Engineering</p>
             </div>
             <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-rose-500/10 to-transparent p-6">
-              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-rose-500/20 text-2xl">🤖</div>
-              <h4 className="mb-2 font-semibold text-white">定时任务</h4>
-              <p className="text-sm text-slate-400">自动化内容创作</p>
+              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-rose-500/20 text-2xl">🧠</div>
+              <h4 className="mb-2 font-semibold text-white">L1/L2 分层记忆</h4>
+              <p className="text-sm text-slate-400">L1 滚动 7 天观察 + L2 按周完整归档</p>
             </div>
           </div>
 
-          {/* 截图展示 - 网格布局 */}
-          <div className="space-y-6">
+          {/* 核心代码细节截图 */}
+          <div className="space-y-10">
             <div>
-              <h3 className="mb-4 text-lg font-semibold text-white">🐚 部署过程</h3>
-              <div className="grid gap-4 sm:grid-cols-2">
-                <ImageModal src="/lobster-screenshots/deploy-1.jpg" alt="服务器配置" />
-                <ImageModal src="/lobster-screenshots/deploy-2.jpg" alt="环境部署" />
-              </div>
+              <h3 className="mb-2 text-lg font-semibold text-white">① 蒸馏回路核心：采集 → 压缩 → L1/L2 落盘</h3>
+              <p className="mb-4 text-sm text-slate-500">
+                过去 7 天 daily 数据自动收集，单文件 8K / 全量 50K 字符截断防 token 爆炸，蒸馏结果双写滚动记忆与周报归档
+              </p>
+              <ImageModal src="/harness-shots/loop-core.png" alt="蒸馏回路核心代码" />
             </div>
 
             <div>
-              <h3 className="mb-4 text-lg font-semibold text-white">💬 使用效果</h3>
-              <div className="grid gap-4 sm:grid-cols-2">
-                <ImageModal src="/lobster-screenshots/assistant-1.jpg" alt="对话演示" />
-                <ImageModal src="/lobster-screenshots/assistant-2.jpg" alt="任务执行" />
-              </div>
+              <h3 className="mb-2 text-lg font-semibold text-white">② Prompt 即契约：结构化输出约束</h3>
+              <p className="mb-4 text-sm text-slate-500">
+                每个输出段都有数量与格式约束（≤30 字、必须带 commit hash、找不到不许硬凑），把 Bad Case 挡在 Prompt 层
+              </p>
+              <ImageModal src="/harness-shots/prompt-contract.png" alt="结构化 Prompt 契约" />
+            </div>
+
+            <div>
+              <h3 className="mb-2 text-lg font-semibold text-white">③ 模型路由与成本治理</h3>
+              <p className="mb-4 text-sm text-slate-500">
+                axiom a03-deepseek-first：默认低成本模型，temperature 0.3 保证蒸馏输出稳定——模型是路由决策，不是默认选项
+              </p>
+              <ImageModal src="/harness-shots/model-route.png" alt="模型路由代码" />
+            </div>
+
+            <div>
+              <h3 className="mb-2 text-lg font-semibold text-white">④ Skill 蒸馏：经验沉淀的晋升机制</h3>
+              <p className="mb-4 text-sm text-slate-500">
+                反复出现的判断自动收集证据，出现 ≥ 3 次才晋升为 axiom 候选——用数据驱动，不拍脑袋
+              </p>
+              <ImageModal src="/harness-shots/skill-distill.png" alt="Skill 蒸馏晋升机制" />
             </div>
           </div>
 
-          <div className="mt-8 text-center">
-            <a
-              href="https://github.com/YaBoom"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-6 py-3 text-sm text-emerald-400 transition hover:bg-emerald-500/20"
-            >
-              查看更多项目 →
-            </a>
+          <div className="mt-10 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 text-center">
+            <p className="text-sm leading-relaxed text-slate-300">
+              💡 这套 Harness 的价值不在单点代码，而在<b className="text-white">「回路」</b>：
+              每周自动蒸馏出「做了什么 / 学到什么 / 哪里栽了」，再反哺下一轮开发决策——
+              这正是 Agent 开发里 Harness / Loop Engineering 的落地方式。
+            </p>
           </div>
         </section>
 
