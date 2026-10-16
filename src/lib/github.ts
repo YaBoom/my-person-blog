@@ -191,6 +191,145 @@ export function getProjectDescription(repo: GitHubRepo): string {
 }
 
 /**
+ * 精选项目白名单：按 AI Agent 岗位相关性分组的策展配置。
+ * 只展示与 Agent Runtime / MCP / 评测相关的仓库，并附加 JD 视角的亮点解读。
+ */
+export type ProjectGroup = 'runtime' | 'mcp' | 'eval';
+
+export interface CuratedProject {
+  /** 一句话定位（替代/增强 GitHub description） */
+  role: string;
+  /** JD 视角亮点（每条对应岗位要求的具体能力） */
+  highlights: string[];
+  /** 分组 */
+  group: ProjectGroup;
+  /** 能力标签（对齐 Agent 岗 JD 关键词） */
+  jdTags: string[];
+}
+
+export const PROJECT_GROUP_META: Record<ProjectGroup, { title: string; desc: string }> = {
+  runtime: {
+    title: 'Agent Runtime · 编排与可靠性',
+    desc: 'Multi-Agent 编排、状态管理、Tool Calling 可靠性、上下文工程',
+  },
+  mcp: {
+    title: 'MCP 生态 · 协议与工具链',
+    desc: 'MCP 网关、Server 开发、工具接入与权限边界',
+  },
+  eval: {
+    title: '评测与工程效率',
+    desc: 'Agent 评测基准、Bad Case 归因、AI 辅助研发工作流',
+  },
+};
+
+export const CURATED_REPOS: Record<string, CuratedProject> = {
+  'agent-guardrails-zhuyt': {
+    role: 'Agent Tool Calling 可靠性护栏（Harness）',
+    highlights: [
+      '救援解析器：修复畸形 JSON / 工具调用，准确率 +46%',
+      '带错误提示引导的智能重试（nudge），失败率 -67%',
+      '步骤执行器防死循环 + 上下文预算防 OOM',
+      '26 场景基准套件：8B 本地模型工具调用准确率 53% → 99%',
+    ],
+    group: 'runtime',
+    jdTags: ['Tool Calling', '重试/熔断', '评测回归', 'Loop Engineering'],
+  },
+  'mulit-agent-study-zhuyt': {
+    role: 'LangGraph Multi-Agent 编排实践',
+    highlights: [
+      'StateGraph 双角色节点编排（Researcher → Writer），共享状态传递',
+      'LangSmith 全链路 tracing + 图结构可视化导出',
+      '依赖注入 LLM，Mock 优先 TDD，Mock/集成测试分层',
+    ],
+    group: 'runtime',
+    jdTags: ['Multi-Agent 编排', 'LangGraph', '可观测性'],
+  },
+  'ContextRoller-zyt': {
+    role: 'AI 会话上下文管理器（MCP 工具）',
+    highlights: [
+      '解决 Claude Code / Cursor 长会话上下文失忆问题',
+      '以 MCP 工具形式管理会话上下文的压缩与恢复',
+      '上下文工程（Context Engineering）落地实践',
+    ],
+    group: 'runtime',
+    jdTags: ['上下文管理', 'MCP', 'Context Engineering'],
+  },
+  'mcp-gateway-lite-zhuyt': {
+    role: '企业级 MCP 服务器统一网关',
+    highlights: [
+      'JWT / API Key 双认证 + RBAC 权限边界（沙箱化管控）',
+      '限流与配额治理，防成本失控',
+      'Prometheus 指标 + SQLite 全链路审计留痕',
+    ],
+    group: 'mcp',
+    jdTags: ['MCP', '权限沙箱', '限流', '全链路审计'],
+  },
+  'fastapi-langgraph-mcp-zyt': {
+    role: 'FastAPI + LangGraph + MCP 集成实践',
+    highlights: [
+      'LangGraph 图编排与 MCP 工具接入结合',
+      'FastAPI 异步服务承载 Agent 运行时',
+    ],
+    group: 'mcp',
+    jdTags: ['LangGraph', 'MCP', 'FastAPI'],
+  },
+  'chrome-devtools-mcp-lite-zyt': {
+    role: '精简版 Chrome DevTools MCP Server',
+    highlights: [
+      '自写 Tool Schema，让 AI 直接控制浏览器调试',
+      '从零实现 MCP Server 协议细节，非简单封装 SDK',
+    ],
+    group: 'mcp',
+    jdTags: ['MCP Server', '自写 Tool Schema'],
+  },
+  'agent-skills-zyt': {
+    role: 'Agent Skills 范式对照实验（Skills Lab）',
+    highlights: [
+      '对照验证：无技能 / 人工设计技能 / Agent 自生成技能',
+      '技能定义格式 + 任务测试框架，基于 SkillsBench 论文复现',
+      '用数据回答「自生成技能到底有没有用」',
+    ],
+    group: 'eval',
+    jdTags: ['Skills 范式', '评测集', 'Prompt 模板库'],
+  },
+  'loglens-zyt': {
+    role: 'AI 智能日志根因分析工具',
+    highlights: [
+      'LLM 快速定位线上问题根因，Bad Case 归因思路的产品化',
+      '5 Star · 从日志噪声到可行动结论',
+    ],
+    group: 'eval',
+    jdTags: ['根因分析', 'AI 应用'],
+  },
+  'ai-commit-zyt': {
+    role: 'AI 驱动的 Git 提交信息生成工具',
+    highlights: [
+      'Vibe Coding 工作流的日常工具化沉淀',
+      '把 AI 嵌入研发流水线的小切口实践',
+    ],
+    group: 'eval',
+    jdTags: ['Vibe Coding', '研发提效'],
+  },
+};
+
+/** 精选仓库的展示顺序（按 JD 相关度） */
+export const CURATED_ORDER = [
+  'agent-guardrails-zhuyt',
+  'mulit-agent-study-zhuyt',
+  'mcp-gateway-lite-zhuyt',
+  'agent-skills-zyt',
+  'ContextRoller-zyt',
+  'fastapi-langgraph-mcp-zyt',
+  'chrome-devtools-mcp-lite-zyt',
+  'loglens-zyt',
+  'ai-commit-zyt',
+];
+
+export function getCurated(repoName: string): CuratedProject | undefined {
+  return CURATED_REPOS[repoName];
+}
+
+/**
  * 判断是否为新项目（30天内更新）
  */
 export function isNewProject(repo: GitHubRepo): boolean {

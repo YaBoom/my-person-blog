@@ -1,5 +1,6 @@
 // src/app/page.tsx
 // SSR 模式 - 每次刷新获取 GitHub 最新数据
+// 定位：AI Agent 开发工程师 —— 编排 / Tool Calling / MCP / 评测
 
 import { Suspense } from 'react';
 import {
@@ -7,11 +8,13 @@ import {
   getGitHubUser,
   formatDate,
   getLanguageColor,
+  getCurated,
   getProjectTags,
-  getProjectDescription,
-  isNewProject,
-  isHighlightedProject,
-  GitHubRepo,
+  PROJECT_GROUP_META,
+  CURATED_ORDER,
+  type GitHubRepo,
+  type ProjectGroup,
+  type CuratedProject,
 } from '@/lib/github';
 import { ImageModal } from '@/components/ImageModal';
 
@@ -19,27 +22,67 @@ import { ImageModal } from '@/components/ImageModal';
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-// 技术栈配置（保持不变）
+// Agent 技术栈配置
 const techStack = {
-  languages: [
-    { name: "TypeScript", level: 90, color: "#3178C6", icon: "TS" },
-    { name: "Python", level: 85, color: "#3776AB", icon: "PY" },
-    { name: "Java", level: 80, color: "#007396", icon: "JV" },
-    { name: "Go", level: 60, color: "#00ADD8", icon: "GO" },
+  orchestration: [
+    { name: "LangGraph", level: 85, color: "#10B981", icon: "LG" },
+    { name: "LangChain4j", level: 88, color: "#0EA5E9", icon: "L4" },
+    { name: "Spring AI", level: 82, color: "#6DB33F", icon: "SA" },
+    { name: "Dify", level: 80, color: "#8B5CF6", icon: "DF" },
   ],
-  frameworks: [
-    { name: "Next.js", level: 88, color: "#000000", icon: "Nx" },
-    { name: "React", level: 85, color: "#61DAFB", icon: "Re" },
-    { name: "SpringBoot", level: 82, color: "#6DB33F", icon: "SB" },
-    { name: "MCP", level: 75, color: "#10B981", icon: "MC" },
+  protocol: [
+    { name: "MCP 协议", level: 90, color: "#10B981", icon: "MC" },
+    { name: "Tool Calling", level: 90, color: "#F59E0B", icon: "TC" },
+    { name: "Function Calling", level: 88, color: "#3B82F6", icon: "FC" },
+    { name: "Prompt 工程", level: 85, color: "#EC4899", icon: "PE" },
   ],
-  tools: [
-    { name: "AI 工具探索", level: 90, color: "#8B5CF6", icon: "AI" },
-    { name: "Node.js", level: 85, color: "#339933", icon: "Nd" },
-    { name: "Tailwind", level: 88, color: "#06B6D4", icon: "Tw" },
-    { name: "Docker", level: 70, color: "#2496ED", icon: "Dk" },
+  foundation: [
+    { name: "Python / FastAPI", level: 85, color: "#3776AB", icon: "PY" },
+    { name: "Java / Spring Boot", level: 92, color: "#007396", icon: "JV" },
+    { name: "模型接入", level: 88, color: "#8B5CF6", icon: "ML" },
+    { name: "Docker / K8s", level: 80, color: "#2496ED", icon: "Dk" },
   ],
 };
+
+// Agent 能力矩阵：逐条对齐 Agent 开发岗的核心职责
+const agentCapabilities = [
+  {
+    icon: "🧭",
+    title: "Multi-Agent 编排",
+    desc: "LangGraph StateGraph 双角色流水线、共享状态传递、LangSmith 全链路 tracing；生产端落地 LangChain4j Function Calling Agent 与 Dify Chatflow 编排。",
+    repo: "mulit-agent-study-zhuyt",
+  },
+  {
+    icon: "🛡️",
+    title: "Tool Calling 可靠性",
+    desc: "自研 Agent Guardrails：救援解析器修复畸形工具调用 JSON、带引导的智能重试、步骤执行器防死循环、上下文预算防 OOM。8B 模型准确率 53% → 99%。",
+    repo: "agent-guardrails-zhuyt",
+  },
+  {
+    icon: "🔌",
+    title: "MCP 生态与权限边界",
+    desc: "MCP Gateway Lite 统一网关：JWT/API Key 双认证 + RBAC 权限沙箱 + 限流配额 + Prometheus 指标 + 全链路审计；另有多个自写 Tool Schema 的 MCP Server 实践。",
+    repo: "mcp-gateway-lite-zhuyt",
+  },
+  {
+    icon: "🧪",
+    title: "评测集与回归",
+    desc: "26 场景 Agent 基准套件自动跑分；Skills Lab 对照实验（无技能/人工技能/自生成技能）；AI 编程模型横评。用数据说话，不是只接第三方 SDK。",
+    repo: "agent-skills-zyt",
+  },
+  {
+    icon: "🧠",
+    title: "上下文工程",
+    desc: "ContextRoller：以 MCP 工具管理 Claude Code / Cursor 会话上下文；生产 Agent 的语义缓存 + 前缀缓存治理，单次 Input Token 降低 55%。",
+    repo: "ContextRoller-zyt",
+  },
+  {
+    icon: "🏭",
+    title: "生产级 Agent 落地",
+    desc: "豆包大模型商标选标 Agent（意图解析→分类推断→关键词召回→超时降级）、Qwen3-VL 多模态智能填报、Ollama 私有化部署 Function Calling Agent。",
+    repo: null,
+  },
+];
 
 // 统计数据卡片
 function StatCard({ number, label, icon }: { number: string; label: string; icon: string }) {
@@ -78,65 +121,59 @@ function TechBar({ name, level, color, icon }: { name: string; level: number; co
   );
 }
 
-// 项目卡片
-function ProjectCard({ repo, index }: { repo: GitHubRepo; index: number }) {
-  const tags = getProjectTags(repo);
-  const description = getProjectDescription(repo);
-  const isNew = isNewProject(repo);
-  const isHighlight = isHighlightedProject(repo);
-  const languageColor = getLanguageColor(repo.language);
-  
+// 精选项目卡片（策展数据 + GitHub 实时数据）
+function ProjectCard({ name, repo, curated, index }: { name: string; repo?: GitHubRepo; curated: CuratedProject; index: number }) {
+  const url = repo?.html_url ?? `https://github.com/YaBoom/${name}`;
+  const tags = curated.jdTags;
+
   return (
     <a
-      href={repo.html_url}
+      href={url}
       target="_blank"
       rel="noreferrer"
-      className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/10 to-white/5 p-6 backdrop-blur-sm transition-all duration-500 hover:border-emerald-500/50 hover:shadow-2xl hover:shadow-emerald-500/20"
+      className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/10 to-white/5 p-6 backdrop-blur-sm transition-all duration-500 hover:border-emerald-500/50 hover:shadow-2xl hover:shadow-emerald-500/20"
       style={{ animationDelay: `${index * 100}ms` }}
     >
-      {/* NEW 标签 */}
-      {(isNew || isHighlight) && (
-        <div className="absolute -right-12 top-6 rotate-45 bg-gradient-to-r from-pink-500 to-rose-500 px-12 py-1 text-xs font-bold text-white shadow-lg">
-          {isHighlight ? 'HOT' : 'NEW'}
-        </div>
-      )}
-
-      <div className="mb-4 flex items-center justify-between">
-        <div className="flex flex-wrap gap-2">
-          {tags.map((tag) => (
-            <span
-              key={tag}
-              className="rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-emerald-300"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-        <span className="text-xs text-slate-500">{formatDate(repo.pushed_at)}</span>
+      <div className="mb-3 flex flex-wrap gap-2">
+        {tags.map((tag) => (
+          <span
+            key={tag}
+            className="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-300"
+          >
+            {tag}
+          </span>
+        ))}
       </div>
 
-      <h3 className="mb-2 text-xl font-bold text-white transition-colors group-hover:text-emerald-400">
-        {repo.name}
+      <h3 className="mb-1 text-lg font-bold text-white transition-colors group-hover:text-emerald-400">
+        {name}
       </h3>
+      <p className="mb-3 text-sm font-medium text-slate-300">{curated.role}</p>
 
-      <p className="mb-4 text-sm leading-relaxed text-slate-400">
-        {description}
-      </p>
+      <ul className="mb-4 flex-1 space-y-1.5">
+        {curated.highlights.map((h) => (
+          <li key={h} className="flex gap-2 text-xs leading-relaxed text-slate-400">
+            <span className="mt-0.5 text-emerald-500">▸</span>
+            <span>{h}</span>
+          </li>
+        ))}
+      </ul>
 
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4 text-sm text-slate-500">
-          {repo.language && (
+      <div className="flex items-center justify-between text-sm text-slate-500">
+        <div className="flex items-center gap-4">
+          {repo?.language && (
             <span className="flex items-center gap-1">
-              <span 
-                className="h-3 w-3 rounded-full" 
-                style={{ backgroundColor: languageColor }}
+              <span
+                className="h-3 w-3 rounded-full"
+                style={{ backgroundColor: getLanguageColor(repo.language) }}
               />
               {repo.language}
             </span>
           )}
-          <span>⭐ {repo.stargazers_count}</span>
+          {repo && <span>⭐ {repo.stargazers_count}</span>}
+          {repo && <span className="text-xs">{formatDate(repo.pushed_at)}</span>}
         </div>
-        <span className="text-sm text-emerald-400 transition-all group-hover:translate-x-2">
+        <span className="text-emerald-400 transition-all group-hover:translate-x-2">
           查看项目 →
         </span>
       </div>
@@ -147,39 +184,55 @@ function ProjectCard({ repo, index }: { repo: GitHubRepo; index: number }) {
   );
 }
 
-// 项目列表组件（异步获取数据）
-async function ProjectList() {
+// 精选项目列表：策展白名单 × GitHub 实时数据，按 JD 相关度分组展示
+async function CuratedProjectList() {
+  let repos: GitHubRepo[] = [];
   try {
-    const repos = await getUserRepos();
-    const featuredRepos = repos.slice(0, 6); // 取前6个最新项目
-
-    return (
-      <>
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {featuredRepos.map((repo, index) => (
-            <ProjectCard key={repo.id} repo={repo} index={index} />
-          ))}
-        </div>
-        <p className="mt-4 text-center text-xs text-slate-500">
-          数据更新时间: {new Date().toLocaleString('zh-CN', { 
-            month: '2-digit', 
-            day: '2-digit', 
-            hour: '2-digit', 
-            minute: '2-digit',
-            second: '2-digit'
-          })}
-        </p>
-      </>
-    );
+    repos = await getUserRepos();
   } catch (error) {
-    return (
-      <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-8 text-center">
-        <div className="mb-4 text-4xl">⚠️</div>
-        <h3 className="mb-2 text-lg font-semibold text-red-400">获取 GitHub 数据失败</h3>
-        <p className="text-slate-400">请检查网络连接或稍后重试</p>
-      </div>
-    );
+    console.error('Failed to fetch GitHub repos:', error);
   }
+  const repoMap = new Map(repos.map((r) => [r.name, r]));
+
+  const groups: ProjectGroup[] = ['runtime', 'mcp', 'eval'];
+  return (
+    <div className="space-y-14">
+      {groups.map((group) => {
+        const items = CURATED_ORDER
+          .map((name) => ({ name, curated: getCurated(name)! }))
+          .filter(({ curated }) => curated.group === group)
+          .map(({ name, curated }) => ({ name, curated, repo: repoMap.get(name) }));
+
+        return (
+          <div key={group}>
+            <div className="mb-6 flex items-baseline gap-4">
+              <h3 className="text-xl font-bold text-white">{PROJECT_GROUP_META[group].title}</h3>
+              <p className="text-sm text-slate-500">{PROJECT_GROUP_META[group].desc}</p>
+            </div>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {items.map(({ name, curated, repo }, index) => (
+                <ProjectCard
+                  key={name}
+                  name={name}
+                  repo={repo}
+                  curated={curated}
+                  index={index}
+                />
+              ))}
+            </div>
+          </div>
+        );
+      })}
+      <p className="text-center text-xs text-slate-500">
+        Star 数与更新时间实时同步 GitHub · 数据更新时间: {new Date().toLocaleString('zh-CN', {
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+        })}
+      </p>
+    </div>
+  );
 }
 
 // 统计信息组件（异步获取）
@@ -187,23 +240,26 @@ async function StatsSection() {
   try {
     const [user, repos] = await Promise.all([getGitHubUser(), getUserRepos()]);
     const totalStars = repos.reduce((sum, repo) => sum + repo.stargazers_count, 0);
-    
+    const mcpAgentRepos = repos.filter((r) =>
+      /mcp|agent|langgraph|rag|guardrail|skill/i.test(r.name)
+    ).length;
+
     return (
       <div className="grid grid-cols-2 gap-4">
         <StatCard number={`${user.public_repos}`} label="公开仓库" icon="📦" />
         <StatCard number={`${totalStars}`} label="总 Stars" icon="⭐" />
-        <StatCard number={`${repos.filter(r => r.language).length}`} label="使用语言" icon="🔤" />
-        <StatCard number="∞" label="踩坑记录" icon="🐛" />
+        <StatCard number={`${mcpAgentRepos}+`} label="Agent/MCP 项目" icon="🤖" />
+        <StatCard number="53→99%" label="护栏实测准确率" icon="🛡️" />
       </div>
     );
   } catch (error) {
     // 失败时显示默认数据
     return (
       <div className="grid grid-cols-2 gap-4">
-        <StatCard number="20+" label="开源项目" icon="🚀" />
-        <StatCard number="5+" label="技术领域" icon="💡" />
-        <StatCard number="4" label="编程语言" icon="🛠️" />
-        <StatCard number="∞" label="踩坑记录" icon="🐛" />
+        <StatCard number="30+" label="开源项目" icon="🚀" />
+        <StatCard number="10+" label="Agent/MCP 项目" icon="🤖" />
+        <StatCard number="4" label="MCP Server 实践" icon="🔌" />
+        <StatCard number="53→99%" label="护栏实测准确率" icon="🛡️" />
       </div>
     );
   }
@@ -212,9 +268,16 @@ async function StatsSection() {
 // 加载骨架屏
 function ProjectsSkeleton() {
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      {[...Array(6)].map((_, i) => (
-        <div key={i} className="h-64 animate-pulse rounded-2xl border border-white/10 bg-white/5" />
+    <div className="space-y-14">
+      {['runtime', 'mcp', 'eval'].map((g) => (
+        <div key={g}>
+          <div className="mb-6 h-7 w-64 animate-pulse rounded-lg bg-white/5" />
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="h-64 animate-pulse rounded-2xl border border-white/10 bg-white/5" />
+            ))}
+          </div>
+        </div>
       ))}
     </div>
   );
@@ -242,8 +305,9 @@ export default function Home() {
           </div>
           <div className="hidden gap-8 text-sm sm:flex">
             <a href="#about" className="transition hover:text-emerald-400">关于</a>
+            <a href="#capabilities" className="transition hover:text-emerald-400">Agent 能力</a>
             <a href="#projects" className="transition hover:text-emerald-400">项目</a>
-            <a href="#lobster" className="transition hover:text-emerald-400">Openclaw部署</a>
+            <a href="#lobster" className="transition hover:text-emerald-400">AI 助手实战</a>
             <a href="#stack" className="transition hover:text-emerald-400">技术栈</a>
           </div>
           <a
@@ -264,22 +328,22 @@ export default function Home() {
             <div className="space-y-8">
               <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-400">
                 <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
-                还在摸索中的技术爱好者
+                AI Agent 开发 · Multi-Agent 编排 / Tool Calling / MCP / 评测
               </div>
 
               <h1 className="text-5xl font-bold leading-tight text-white sm:text-6xl">
-                探索技术边界
+                构建可靠的
                 <br />
                 <span className="bg-gradient-to-r from-emerald-400 to-blue-500 bg-clip-text text-transparent">
-                  记录真实踩坑
+                  Agent Runtime
                 </span>
               </h1>
 
               <p className="text-lg leading-relaxed text-slate-400">
-                你好，我是 <span className="text-emerald-400">Jack</span>。
-                专注于现代化 Web 开发、MCP 服务架构和 AI 工具探索。
+                你好，我是 <span className="text-emerald-400">Jack</span>，9 年后端工程师，深耕 AI Agent 工程化。
                 <br />
-                这里记录从 0 到 1 的真实折腾过程，常有 bug，欢迎指点。
+                从 LangGraph 多 Agent 编排、自研 Tool Calling 护栏（8B 模型准确率 53%→99%），
+                到 MCP 网关与评测回归——不止调 API，把 Agent 做得<b className="text-slate-200">可编排、可护栏、可评测</b>。
               </p>
 
               <div className="flex flex-wrap gap-4">
@@ -313,7 +377,47 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 项目展示 - SSR 获取 GitHub 数据 */}
+        {/* Agent 能力矩阵 */}
+        <section id="capabilities" className="mb-32">
+          <div className="mb-12">
+            <p className="mb-2 text-sm font-medium uppercase tracking-wider text-emerald-400">
+              Agent Capability Matrix
+            </p>
+            <h2 className="text-4xl font-bold text-white">Agent 能力矩阵</h2>
+            <p className="mt-2 text-sm text-slate-500">
+              编排 · 护栏 · 协议 · 评测 · 上下文 · 生产落地
+            </p>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {agentCapabilities.map((cap) => (
+              <div
+                key={cap.title}
+                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm transition-all duration-500 hover:border-emerald-500/40 hover:bg-white/10"
+              >
+                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/15 text-2xl">
+                  {cap.icon}
+                </div>
+                <h3 className="mb-2 text-lg font-semibold text-white transition-colors group-hover:text-emerald-400">
+                  {cap.title}
+                </h3>
+                <p className="text-sm leading-relaxed text-slate-400">{cap.desc}</p>
+                {cap.repo && (
+                  <a
+                    href={`https://github.com/YaBoom/${cap.repo}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-3 inline-block text-xs text-emerald-400/80 transition hover:text-emerald-300"
+                  >
+                    {cap.repo} →
+                  </a>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* 精选项目 - 策展白名单 × GitHub 实时数据 */}
         <section id="projects" className="mb-32">
           <div className="mb-12 flex items-end justify-between">
             <div>
@@ -322,7 +426,7 @@ export default function Home() {
               </p>
               <h2 className="text-4xl font-bold text-white">精选项目</h2>
               <p className="mt-2 text-sm text-slate-500">
-                实时同步 GitHub 最新数据 · 刷新即可更新
+                按 Agent 工程能力分组策展 · Star 与更新时间实时同步 GitHub
               </p>
             </div>
             <a
@@ -336,19 +440,19 @@ export default function Home() {
           </div>
 
           <Suspense fallback={<ProjectsSkeleton />}>
-            <ProjectList />
+            <CuratedProjectList />
           </Suspense>
         </section>
 
-        {/* Openclaw部署展示 */}
+        {/* Openclaw 实战展示 */}
         <section id="lobster" className="mb-32">
           <div className="mb-12 text-center">
             <p className="mb-2 text-sm font-medium uppercase tracking-wider text-emerald-400">
-              OpenClaw
+              Agent in Production
             </p>
-            <h2 className="text-4xl font-bold text-white">Openclaw 部署过程</h2>
+            <h2 className="text-4xl font-bold text-white">个人 AI 助手实战</h2>
             <p className="mt-4 text-slate-400">
-              基于 OpenClaw 搭建个人 AI 助手，支持小红书、GitHub 等技能集成
+              基于 OpenClaw 搭建的个人 AI Agent：技能（Skills）集成、定时任务、容器化部署全流程
             </p>
           </div>
 
@@ -361,13 +465,13 @@ export default function Home() {
             </div>
             <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-blue-500/10 to-transparent p-6">
               <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500/20 text-2xl">⚙️</div>
-              <h4 className="mb-2 font-semibold text-white">OpenClaw 部署</h4>
+              <h4 className="mb-2 font-semibold text-white">Agent 部署</h4>
               <p className="text-sm text-slate-400">Docker 容器化部署</p>
             </div>
             <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-purple-500/10 to-transparent p-6">
-              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-purple-500/20 text-2xl">🔗</div>
-              <h4 className="mb-2 font-semibold text-white">技能集成</h4>
-              <p className="text-sm text-slate-400">小红书/GitHub/飞书</p>
+              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-purple-500/20 text-2xl">🧩</div>
+              <h4 className="mb-2 font-semibold text-white">Skills 集成</h4>
+              <p className="text-sm text-slate-400">小红书/GitHub/飞书技能热插拔</p>
             </div>
             <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-rose-500/10 to-transparent p-6">
               <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-rose-500/20 text-2xl">🤖</div>
@@ -396,9 +500,9 @@ export default function Home() {
           </div>
 
           <div className="mt-8 text-center">
-            <a 
-              href="https://github.com/YaBoom" 
-              target="_blank" 
+            <a
+              href="https://github.com/YaBoom"
+              target="_blank"
               rel="noreferrer"
               className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-6 py-3 text-sm text-emerald-400 transition hover:bg-emerald-500/20"
             >
@@ -413,35 +517,35 @@ export default function Home() {
             <p className="mb-2 text-sm font-medium uppercase tracking-wider text-emerald-400">
               Tech Stack
             </p>
-            <h2 className="text-4xl font-bold text-white">技术栈</h2>
+            <h2 className="text-4xl font-bold text-white">Agent 技术栈</h2>
             <p className="mt-4 text-slate-400">
-              把复杂的东西讲简单，把简单的东西折腾复杂
+              编排框架 × 协议与工具 × 工程底座，9 年后端功底托底
             </p>
           </div>
 
           <div className="space-y-8">
             <div>
-              <h3 className="mb-4 text-lg font-semibold text-white">编程语言</h3>
+              <h3 className="mb-4 text-lg font-semibold text-white">编排框架</h3>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                {techStack.languages.map((tech) => (
+                {techStack.orchestration.map((tech) => (
                   <TechBar key={tech.name} {...tech} />
                 ))}
               </div>
             </div>
 
             <div>
-              <h3 className="mb-4 text-lg font-semibold text-white">框架与库</h3>
+              <h3 className="mb-4 text-lg font-semibold text-white">协议与工具</h3>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                {techStack.frameworks.map((tech) => (
+                {techStack.protocol.map((tech) => (
                   <TechBar key={tech.name} {...tech} />
                 ))}
               </div>
             </div>
 
             <div>
-              <h3 className="mb-4 text-lg font-semibold text-white">工具与实践</h3>
+              <h3 className="mb-4 text-lg font-semibold text-white">工程底座</h3>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                {techStack.tools.map((tech) => (
+                {techStack.foundation.map((tech) => (
                   <TechBar key={tech.name} {...tech} />
                 ))}
               </div>
@@ -450,19 +554,19 @@ export default function Home() {
 
           <div className="mt-12 grid gap-6 sm:grid-cols-3">
             <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-emerald-500/10 to-transparent p-6">
-              <div className="mb-3 text-2xl">📝</div>
-              <h4 className="mb-2 font-semibold text-white">项目先行</h4>
-              <p className="text-sm text-slate-400">代码先跑通，文章后跟进，GitHub 同步</p>
+              <div className="mb-3 text-2xl">🔬</div>
+              <h4 className="mb-2 font-semibold text-white">Demo 先行</h4>
+              <p className="text-sm text-slate-400">每个概念都落到可运行的仓库：可单测、可复现、可跑分</p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-blue-500/10 to-transparent p-6">
-              <div className="mb-3 text-2xl">🎯</div>
-              <h4 className="mb-2 font-semibold text-white">真实踩坑</h4>
-              <p className="text-sm text-slate-400">有人味写作，记录真实探索过程</p>
+              <div className="mb-3 text-2xl">📏</div>
+              <h4 className="mb-2 font-semibold text-white">用数据说话</h4>
+              <p className="text-sm text-slate-400">53%→99% 的护栏准确率、-55% 的 Token 成本，评测驱动迭代</p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-purple-500/10 to-transparent p-6">
-              <div className="mb-3 text-2xl">🚀</div>
-              <h4 className="mb-2 font-semibold text-white">持续探索</h4>
-              <p className="text-sm text-slate-400">AI 工具、MCP 服务、全栈开发</p>
+              <div className="mb-3 text-2xl">⚡</div>
+              <h4 className="mb-2 font-semibold text-white">Vibe Coding 深度用户</h4>
+              <p className="text-sm text-slate-400">Cursor / Claude Code 重度实践，AI 辅助研发工作流工具化</p>
             </div>
           </div>
         </section>
@@ -472,9 +576,9 @@ export default function Home() {
           <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-r from-emerald-600/20 via-blue-600/20 to-purple-600/20 p-12 text-center">
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PHBhdGggZD0iTTM2IDM0aDR2NGgtNHpNMjAgMjBoNHY0aC00eiIvPjwvZz48L2c+PC9zdmc+')] opacity-50" />
             <div className="relative">
-              <h2 className="mb-4 text-3xl font-bold text-white">一起探索技术</h2>
+              <h2 className="mb-4 text-3xl font-bold text-white">一起构建可靠的 Agent</h2>
               <p className="mb-8 text-slate-400">
-                对 Web 开发、MCP 服务或 AI 工具感兴趣？欢迎交流
+                对 Multi-Agent 编排、MCP 生态或 Agent 评测感兴趣？欢迎交流
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <a
@@ -485,9 +589,12 @@ export default function Home() {
                 >
                   GitHub 主页
                 </a>
-                <span className="flex items-center text-sm text-slate-500">
-                  常有 bug，欢迎指点
-                </span>
+                <a
+                  href="https://www.zylab.asia"
+                  className="rounded-full border border-white/20 bg-white/5 px-8 py-3 font-semibold text-white transition hover:border-white/40"
+                >
+                  技术博客 →
+                </a>
               </div>
             </div>
           </div>
@@ -495,7 +602,7 @@ export default function Home() {
 
         {/* Footer */}
         <footer className="border-t border-white/10 py-8 text-center text-sm text-slate-500">
-          <p>© 2026 Jack · 探索技术，记录真实</p>
+          <p>© 2026 Jack · 构建可靠的 Agent Runtime</p>
           <p className="mt-1">实时同步 GitHub 数据 · SSR 渲染</p>
         </footer>
       </main>
