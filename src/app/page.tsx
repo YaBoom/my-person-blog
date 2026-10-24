@@ -5,7 +5,6 @@
 import { Suspense } from 'react';
 import {
   getUserRepos,
-  getGitHubUser,
   formatDate,
   getLanguageColor,
   getCurated,
@@ -25,22 +24,22 @@ export const revalidate = 0;
 // Agent 技术栈配置
 const techStack = {
   orchestration: [
-    { name: "LangGraph", level: 85, color: "#10B981", icon: "LG" },
-    { name: "LangChain4j", level: 88, color: "#0EA5E9", icon: "L4" },
-    { name: "Spring AI", level: 82, color: "#6DB33F", icon: "SA" },
-    { name: "Dify", level: 80, color: "#8B5CF6", icon: "DF" },
+    { name: "LangChain4j", usedIn: "失物招领 Agent（生产）", color: "#0EA5E9", icon: "L4" },
+    { name: "Spring AI", usedIn: "RAG 知识问答（生产）", color: "#6DB33F", icon: "SA" },
+    { name: "Dify", usedIn: "多模态填报（生产）", color: "#8B5CF6", icon: "DF" },
+    { name: "LangGraph", usedIn: "Multi-Agent 编排实验", color: "#10B981", icon: "LG" },
   ],
   protocol: [
-    { name: "MCP 协议", level: 90, color: "#10B981", icon: "MC" },
-    { name: "Tool Calling", level: 90, color: "#F59E0B", icon: "TC" },
-    { name: "Function Calling", level: 88, color: "#3B82F6", icon: "FC" },
-    { name: "Prompt 工程", level: 85, color: "#EC4899", icon: "PE" },
+    { name: "MCP 协议", usedIn: "3 个 Server + 1 个 Gateway", color: "#10B981", icon: "MC" },
+    { name: "Tool Calling", usedIn: "Guardrails 护栏 + 失物招领", color: "#F59E0B", icon: "TC" },
+    { name: "Function Calling", usedIn: "LangChain4j / Spring AI", color: "#3B82F6", icon: "FC" },
+    { name: "结构化输出", usedIn: "强约束 JSON 契约（填报）", color: "#EC4899", icon: "SO" },
   ],
   foundation: [
-    { name: "Python / FastAPI", level: 85, color: "#3776AB", icon: "PY" },
-    { name: "Java / Spring Boot", level: 92, color: "#007396", icon: "JV" },
-    { name: "模型接入", level: 88, color: "#8B5CF6", icon: "ML" },
-    { name: "Docker / K8s", level: 80, color: "#2496ED", icon: "Dk" },
+    { name: "Java / Spring Boot", usedIn: "10 年主力栈", color: "#007396", icon: "JV" },
+    { name: "Python / FastAPI", usedIn: "AIGC 队列 + MCP 对照", color: "#3776AB", icon: "PY" },
+    { name: "MySQL / Redis / ES", usedIn: "商标平台检索与缓存", color: "#8B5CF6", icon: "DB" },
+    { name: "Docker / K8s", usedIn: "多环境编排与部署", color: "#2496ED", icon: "DK" },
   ],
 };
 
@@ -95,27 +94,19 @@ function StatCard({ number, label, icon }: { number: string; label: string; icon
   );
 }
 
-// 技术栈进度条
-function TechBar({ name, level, color, icon }: { name: string; level: number; color: string; icon: string }) {
+// 技术栈卡片：只写「技术 + 落在哪个项目」，不做自评打分
+function TechCard({ name, usedIn, color, icon }: { name: string; usedIn: string; color: string; icon: string }) {
   return (
-    <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/5 p-4 transition-all duration-300 hover:border-white/20 hover:bg-white/10">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div
-            className="flex h-10 w-10 items-center justify-center rounded-lg text-sm font-bold text-white"
-            style={{ backgroundColor: color }}
-          >
-            {icon}
-          </div>
-          <span className="font-medium text-white">{name}</span>
-        </div>
-        <span className="text-sm text-slate-400">{level}%</span>
+    <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-4 transition-all duration-300 hover:border-white/20 hover:bg-white/10">
+      <div
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-sm font-bold text-white"
+        style={{ backgroundColor: color }}
+      >
+        {icon}
       </div>
-      <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
-        <div
-          className="h-full rounded-full transition-all duration-1000 ease-out"
-          style={{ width: `${level}%`, backgroundColor: color }}
-        />
+      <div className="min-w-0">
+        <div className="truncate font-medium text-white">{name}</div>
+        <div className="mt-0.5 truncate text-xs text-slate-500">{usedIn}</div>
       </div>
     </div>
   );
@@ -237,14 +228,14 @@ async function CuratedProjectList() {
 // 统计信息组件（异步获取）——只展示有价值信号，不暴露 Star 短板
 async function StatsSection() {
   try {
-    const [user, repos] = await Promise.all([getGitHubUser(), getUserRepos()]);
+    const repos = await getUserRepos();
     const mcpAgentRepos = repos.filter((r) =>
       /mcp|agent|langgraph|rag|guardrail|skill|loglens|harness|context/i.test(r.name)
     ).length;
 
     return (
       <div className="grid grid-cols-2 gap-4">
-        <StatCard number={`${user.public_repos}`} label="开源仓库" icon="📦" />
+        <StatCard number="10 年" label="后端工程经验" icon="⚙️" />
         <StatCard number={`${mcpAgentRepos}+`} label="Agent/MCP 实战仓库" icon="🤖" />
         <StatCard number="53→99%" label="护栏实测准确率" icon="🛡️" />
         <StatCard number="7×24" label="Harness 自动回路" icon="🔁" />
@@ -254,7 +245,7 @@ async function StatsSection() {
     // 失败时显示默认数据
     return (
       <div className="grid grid-cols-2 gap-4">
-        <StatCard number="30+" label="开源仓库" icon="📦" />
+        <StatCard number="10 年" label="后端工程经验" icon="⚙️" />
         <StatCard number="10+" label="Agent/MCP 实战仓库" icon="🤖" />
         <StatCard number="53→99%" label="护栏实测准确率" icon="🛡️" />
         <StatCard number="7×24" label="Harness 自动回路" icon="🔁" />
@@ -281,6 +272,105 @@ function ProjectsSkeleton() {
   );
 }
 
+// 生产交付：任职期间的企业系统（脱敏展示，代码归甲方）
+const deliveries = [
+  {
+    tag: "SaaS · 0-1",
+    title: "商标交易平台",
+    role: "技术负责人 · 带 3 人团队",
+    period: "2026.03 – 2026.08",
+    points: [
+      "3 人团队下选「模块化单体」而非微服务：分布式事务与运维成本不划算，按业务域包级隔离",
+      "30+ 字段检索模型：IK 分词 + 中英双路召回，同名商标聚合，规避 BM25 长度干扰",
+      "选标 Agent：自然语言 → 尼斯分类推断 → 关键词生成 → 分档计分召回，超时自动降级",
+    ],
+    metric: "183 个接口 · 29 张业务表 · 51 个 Flyway 版本 · 四端",
+    glow: "from-emerald-500/10",
+  },
+  {
+    tag: "工业控制",
+    title: "WCS 立体料仓",
+    role: "核心开发 · 现场联调",
+    period: "2025.05 – 2025.10",
+    points: [
+      "自研 Modbus TCP 通信层：Holding Register 位级读写（含高低字节交换），点位配置化不改代码发版",
+      "16 步责任链编排出入库流程，静态锁保证堆垛机同一时刻单任务，杜绝指令交叉",
+      "4 路隔离线程池按「手动/自动 × 入库/出库」拆分，超时兜底 + 异常寄存器防双向死锁",
+    ],
+    metric: "18 类 PLC 告警位级解析 · 25+ 接口 · 10 张业务表",
+    glow: "from-orange-500/10",
+  },
+  {
+    tag: "多模态 Agent",
+    title: "行业资料智能填报",
+    role: "技术负责人 · 架构集成",
+    period: "2025.12 – 2026.02",
+    points: [
+      "「Dify 编排 + Spring Boot 持久 + Node.js 导出」三进程异构：AI 编排与业务解耦",
+      "Qwen3-VL 提取资料图片参数，输出经强约束 JSON 契约转换后落库，同一份 JSON 驱动预览与导出",
+      "多轮增量：LLM 对新旧结果语义合并而非覆盖，解决多轮上传的字段漂移",
+    ],
+    metric: "Chatflow 多轮 + 增量上传 + 人工纠偏闭环",
+    glow: "from-purple-500/10",
+  },
+  {
+    tag: "RAG · 多模型",
+    title: "AI 应用平台",
+    role: "后端开发 · 平台基座",
+    period: "2024.12 – 2025.03",
+    points: [
+      "策略模式抽象 IAiChatService：GLM-4 与自部署 Llama 按场景切换，新增模型只实现接口",
+      "Spring AI Alibaba + Milvus 建 RAG 知识问答，OAuth2 + Spring Security 打底",
+      "SSE 统一 token 级流式：智谱侧 Flowable 逐 chunk 转发，Llama 侧自研异步消费",
+    ],
+    metric: "25 个 Flyway 迁移 · Jib 直推私仓 · SonarQube 门禁",
+    glow: "from-blue-500/10",
+  },
+];
+
+function DeliverySection() {
+  return (
+    <section id="delivery" className="mb-32 scroll-mt-24">
+      <div className="mb-12">
+        <p className="mb-2 text-sm font-medium uppercase tracking-wider text-emerald-400">
+          Production Delivery
+        </p>
+        <h2 className="text-4xl font-bold text-white">生产交付</h2>
+        <p className="mt-2 text-sm text-slate-500">
+          任职期间交付的企业系统 · 代码归甲方不公开，架构决策与踩坑细节可面谈
+        </p>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        {deliveries.map((d) => (
+          <div
+            key={d.title}
+            className={`relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br ${d.glow} to-transparent p-6 transition-all duration-500 hover:border-emerald-500/40`}
+          >
+            <div className="mb-4 flex flex-wrap items-center gap-3">
+              <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs text-slate-300">
+                {d.tag}
+              </span>
+              <span className="text-xs text-slate-500">{d.period}</span>
+            </div>
+            <h3 className="mb-1 text-xl font-bold text-white">{d.title}</h3>
+            <p className="mb-4 text-sm font-medium text-emerald-400/80">{d.role}</p>
+            <ul className="mb-4 space-y-2">
+              {d.points.map((p) => (
+                <li key={p} className="flex gap-2 text-sm leading-relaxed text-slate-400">
+                  <span className="mt-1 shrink-0 text-emerald-500">▸</span>
+                  <span>{p}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="border-t border-white/10 pt-3 text-xs text-slate-500">{d.metric}</div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 // 主页面组件
 export default function Home() {
   return (
@@ -303,6 +393,7 @@ export default function Home() {
           </div>
           <div className="hidden gap-8 text-sm sm:flex">
             <a href="#about" className="transition hover:text-emerald-400">关于</a>
+            <a href="#delivery" className="transition hover:text-emerald-400">生产交付</a>
             <a href="#capabilities" className="transition hover:text-emerald-400">Agent 能力</a>
             <a href="#projects" className="transition hover:text-emerald-400">项目</a>
             <a href="#harness" className="transition hover:text-emerald-400">Harness 实战</a>
@@ -321,7 +412,7 @@ export default function Home() {
 
       <main className="mx-auto max-w-6xl px-6 pt-32">
         {/* Hero Section */}
-        <section id="about" className="relative mb-32">
+        <section id="about" className="relative mb-32 scroll-mt-24">
           <div className="grid gap-12 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
             <div className="space-y-8">
               <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-400">
@@ -338,7 +429,7 @@ export default function Home() {
               </h1>
 
               <p className="text-lg leading-relaxed text-slate-400">
-                你好，我是 <span className="text-emerald-400">Jack</span>，9 年后端工程师，深耕 AI Agent 工程化。
+                你好，我是 <span className="text-emerald-400">Jack</span>，10 年后端工程师，深耕 AI Agent 工程化。
                 <br />
                 从 LangGraph 多 Agent 编排、自研 Tool Calling 护栏（8B 模型准确率 53%→99%），
                 到 MCP 网关与评测回归——不止调 API，把 Agent 做得<b className="text-slate-200">可编排、可护栏、可评测</b>。
@@ -346,18 +437,16 @@ export default function Home() {
 
               <div className="flex flex-wrap gap-4">
                 <a
-                  href="#projects"
+                  href="#delivery"
                   className="rounded-full bg-gradient-to-r from-emerald-500 to-blue-600 px-8 py-3 font-semibold text-white shadow-lg shadow-emerald-500/25 transition hover:shadow-xl hover:shadow-emerald-500/40"
                 >
-                  浏览项目
+                  生产交付案例
                 </a>
                 <a
-                  href="https://github.com/YaBoom"
-                  target="_blank"
-                  rel="noreferrer"
+                  href="#projects"
                   className="rounded-full border border-white/20 bg-white/5 px-8 py-3 font-semibold text-white transition hover:border-white/40"
                 >
-                  GitHub →
+                  开源项目 →
                 </a>
               </div>
             </div>
@@ -375,8 +464,11 @@ export default function Home() {
           </div>
         </section>
 
+        {/* 生产交付 */}
+        <DeliverySection />
+
         {/* Agent 能力矩阵 */}
-        <section id="capabilities" className="mb-32">
+        <section id="capabilities" className="mb-32 scroll-mt-24">
           <div className="mb-12">
             <p className="mb-2 text-sm font-medium uppercase tracking-wider text-emerald-400">
               Agent Capability Matrix
@@ -416,7 +508,7 @@ export default function Home() {
         </section>
 
         {/* 精选项目 - 策展白名单 × GitHub 实时数据 */}
-        <section id="projects" className="mb-32">
+        <section id="projects" className="mb-32 scroll-mt-24">
           <div className="mb-12 flex items-end justify-between">
             <div>
               <p className="mb-2 text-sm font-medium uppercase tracking-wider text-emerald-400">
@@ -443,7 +535,7 @@ export default function Home() {
         </section>
 
         {/* Agent Harness 实战拆解 */}
-        <section id="harness" className="mb-32">
+        <section id="harness" className="mb-32 scroll-mt-24">
           <div className="mb-12 text-center">
             <p className="mb-2 text-sm font-medium uppercase tracking-wider text-emerald-400">
               Agent Harness in Practice
@@ -543,14 +635,14 @@ export default function Home() {
         </section>
 
         {/* 技术栈展示 */}
-        <section id="stack" className="mb-32">
+        <section id="stack" className="mb-32 scroll-mt-24">
           <div className="mb-12 text-center">
             <p className="mb-2 text-sm font-medium uppercase tracking-wider text-emerald-400">
               Tech Stack
             </p>
             <h2 className="text-4xl font-bold text-white">Agent 技术栈</h2>
             <p className="mt-4 text-slate-400">
-              编排框架 × 协议与工具 × 工程底座，9 年后端功底托底
+              编排框架 × 协议与工具 × 工程底座，10 年后端功底托底；每项都标注落地项目，不做自评打分
             </p>
           </div>
 
@@ -559,7 +651,7 @@ export default function Home() {
               <h3 className="mb-4 text-lg font-semibold text-white">编排框架</h3>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {techStack.orchestration.map((tech) => (
-                  <TechBar key={tech.name} {...tech} />
+                  <TechCard key={tech.name} {...tech} />
                 ))}
               </div>
             </div>
@@ -568,7 +660,7 @@ export default function Home() {
               <h3 className="mb-4 text-lg font-semibold text-white">协议与工具</h3>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {techStack.protocol.map((tech) => (
-                  <TechBar key={tech.name} {...tech} />
+                  <TechCard key={tech.name} {...tech} />
                 ))}
               </div>
             </div>
@@ -577,7 +669,7 @@ export default function Home() {
               <h3 className="mb-4 text-lg font-semibold text-white">工程底座</h3>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {techStack.foundation.map((tech) => (
-                  <TechBar key={tech.name} {...tech} />
+                  <TechCard key={tech.name} {...tech} />
                 ))}
               </div>
             </div>
@@ -586,13 +678,13 @@ export default function Home() {
           <div className="mt-12 grid gap-6 sm:grid-cols-3">
             <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-emerald-500/10 to-transparent p-6">
               <div className="mb-3 text-2xl">🔬</div>
-              <h4 className="mb-2 font-semibold text-white">Demo 先行</h4>
-              <p className="text-sm text-slate-400">每个概念都落到可运行的仓库：可单测、可复现、可跑分</p>
+              <h4 className="mb-2 font-semibold text-white">生产 + Demo 双轨</h4>
+              <p className="text-sm text-slate-400">技术点既在企业系统里跑过，也有可单测、可跑分的开源实现</p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-blue-500/10 to-transparent p-6">
               <div className="mb-3 text-2xl">📏</div>
               <h4 className="mb-2 font-semibold text-white">用数据说话</h4>
-              <p className="text-sm text-slate-400">53%→99% 的护栏准确率、-55% 的 Token 成本，评测驱动迭代</p>
+              <p className="text-sm text-slate-400">53%→99% 护栏准确率、Input Token 2700→1200，口径可复现</p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-purple-500/10 to-transparent p-6">
               <div className="mb-3 text-2xl">⚡</div>
@@ -607,9 +699,9 @@ export default function Home() {
           <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-r from-emerald-600/20 via-blue-600/20 to-purple-600/20 p-12 text-center">
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PHBhdGggZD0iTTM2IDM0aDR2NGgtNHpNMjAgMjBoNHY0aC00eiIvPjwvZz48L2c+PC9zdmc+')] opacity-50" />
             <div className="relative">
-              <h2 className="mb-4 text-3xl font-bold text-white">一起构建可靠的 Agent</h2>
+              <h2 className="mb-4 text-3xl font-bold text-white">想聊 Agent 工程化落地？</h2>
               <p className="mb-8 text-slate-400">
-                对 Multi-Agent 编排、MCP 生态或 Agent 评测感兴趣？欢迎交流
+                企业项目细节可面谈 · 简历可邮件索取 · 开源代码全在 GitHub
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <a
@@ -621,10 +713,10 @@ export default function Home() {
                   GitHub 主页
                 </a>
                 <a
-                  href="https://www.zylab.asia"
+                  href="mailto:15007105273@163.com"
                   className="rounded-full border border-white/20 bg-white/5 px-8 py-3 font-semibold text-white transition hover:border-white/40"
                 >
-                  技术博客 →
+                  邮件联系
                 </a>
               </div>
             </div>

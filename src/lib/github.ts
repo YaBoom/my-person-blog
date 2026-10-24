@@ -223,6 +223,18 @@ export const PROJECT_GROUP_META: Record<ProjectGroup, { title: string; desc: str
 };
 
 export const CURATED_REPOS: Record<string, CuratedProject> = {
+  'mcp-enterprise-data-server': {
+    role: '企业数据接入 AI 的 MCP Server（权限边界设计）',
+    highlights: [
+      '工具级 RBAC：employee 禁用 MySQL 直连，manager 只能访问 4 张业务表',
+      '敏感字段在返回前脱敏：password / id_card / phone / salary',
+      '参数化查询（? 占位符绑定，占位符与参数数量不符即拒绝）+ 只读硬化拦截 INTO OUTFILE / FOR UPDATE / 多语句',
+      '表级白名单按角色校验，解析前剥离字面量与注释，避免字符串里的 from 被误判成表名',
+      'MCP Client 把同一套工具转成 OpenAI function schema 与 Anthropic input_schema，跨模型复用',
+    ],
+    group: 'mcp',
+    jdTags: ['MCP Server', '工具级 RBAC', '数据脱敏', '多模型复用'],
+  },
   'agent-guardrails-zhuyt': {
     role: 'Agent Tool Calling 可靠性护栏（Harness）',
     highlights: [
@@ -316,6 +328,7 @@ export const CURATED_REPOS: Record<string, CuratedProject> = {
 export const CURATED_ORDER = [
   'agent-guardrails-zhuyt',
   'mulit-agent-study-zhuyt',
+  'mcp-enterprise-data-server',
   'mcp-gateway-lite-zhuyt',
   'agent-skills-zyt',
   'ContextRoller-zyt',
